@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Loader2, Lock, ArrowDownUp, Coins } from "lucide-react";
+import { Loader2, Lock, ArrowDownUp, Coins, ChevronDown, ArrowRight } from "lucide-react";
 import CurrencySelector from "./CurrencySelector";
 import { cn } from "@/lib/utils";
 
@@ -21,7 +21,7 @@ const cryptoCurrencies: Currency[] = [
     id: 'sui', 
     name: 'Sui', 
     code: 'SUI', 
-    icon: <Coins className="text-sui-DEFAULT" size={20} /> 
+    icon: <Coins className="text-blue-500" size={20} /> 
   },
 ];
 
@@ -81,92 +81,91 @@ const SwapCard = () => {
     setToCurrency(currency);
   };
 
-  const inputAnimationClasses = "transition-all duration-300 ease-in-out transform hover:scale-[1.01] focus-within:scale-[1.01]";
-
   return (
-    <div className="glass-panel rounded-2xl p-6 shadow-lg">
-      <div className="flex justify-between items-center mb-6">
-        <h3 className="text-xl font-semibold">Swap</h3>
-        <div className="flex items-center text-brand-primary">
-          <Lock size={16} className="mr-1" />
-          <span className="text-sm">Secure</span>
-        </div>
+    <div className="bg-white/60 backdrop-blur-lg rounded-3xl shadow-lg p-6 max-w-md w-full">
+      <div className="mb-6">
+        <h3 className="text-xl font-semibold mb-1">Swap Crypto to Fiat</h3>
+        <p className="text-gray-500 text-sm">Exchange cryptocurrencies for local currencies instantly</p>
       </div>
       
-      <div className="space-y-5 relative">
-        {/* From Currency Input */}
-        <div className={cn("p-4 rounded-xl bg-white/70 backdrop-blur-md border border-gray-200/40 shadow-sm", inputAnimationClasses)}>
+      {/* You Send Section */}
+      <div className="space-y-5">
+        <div className="bg-blue-50/70 backdrop-blur-sm rounded-2xl p-5">
           <div className="flex justify-between items-center mb-2">
-            <label className="text-sm text-gray-500 font-medium">From</label>
-            <div className="text-sm text-gray-500">
-              Balance: {balance} {fromCurrency.code}
-            </div>
+            <label className="text-sm text-gray-600 font-medium">You send</label>
           </div>
           
-          <div className="flex items-center">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 min-w-[120px]">
+              <div className="bg-blue-100 rounded-full p-1.5">
+                {fromCurrency.icon}
+              </div>
+              <div className="flex items-center gap-1 font-medium">
+                {fromCurrency.code}
+                <ChevronDown size={16} className="text-gray-500" />
+              </div>
+            </div>
+            
             <Input
               type="text"
               value={fromAmount}
               onChange={handleFromAmountChange}
               placeholder="0.00"
-              className="text-xl font-medium border-none bg-transparent p-0 focus-visible:outline-none focus-visible:ring-0 flex-1"
+              className="text-2xl font-medium text-right border-none bg-transparent p-0 focus-visible:outline-none focus-visible:ring-0 w-auto max-w-[150px]"
             />
-            <CurrencySelector
-              label=""
-              selectedCurrency={fromCurrency}
-              currencies={cryptoCurrencies}
-              onCurrencyChange={handleFromCurrencyChange}
-              className="min-w-[120px]"
-            />
-          </div>
-        </div>
-        
-        {/* Swap Button */}
-        <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
-          <Button
-            onClick={handleSwapCurrencies}
-            size="sm"
-            className="rounded-full bg-gray-50 text-gray-500 hover:text-brand-primary hover:bg-white border border-gray-200 shadow-md w-10 h-10 p-0 flex items-center justify-center"
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <Loader2 size={18} className="animate-spin" />
-            ) : (
-              <ArrowDownUp size={18} />
-            )}
-          </Button>
-        </div>
-        
-        {/* To Currency Input */}
-        <div className={cn("p-4 rounded-xl bg-white/70 backdrop-blur-md border border-gray-200/40 shadow-sm", inputAnimationClasses)}>
-          <div className="flex justify-between items-center mb-2">
-            <label className="text-sm text-gray-500 font-medium">To</label>
-            <div className="text-sm text-gray-500">
-              Rate: 1 {fromCurrency.code} = {rate} {toCurrency.code}
-            </div>
           </div>
           
-          <div className="flex items-center">
+          <div className="mt-2 text-right">
+            <span className="text-xs text-gray-500">
+              Balance: <span className="text-blue-600">{balance} {fromCurrency.code}</span>
+            </span>
+          </div>
+        </div>
+        
+        {/* Arrow Button */}
+        <div className="flex justify-center relative">
+          <div className="absolute top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full p-2 shadow-md">
+            <ArrowDownUp size={18} className="text-blue-500" />
+          </div>
+        </div>
+        
+        {/* You Receive Section */}
+        <div className="bg-gray-50/70 backdrop-blur-sm rounded-2xl p-5">
+          <div className="flex justify-between items-center mb-2">
+            <label className="text-sm text-gray-600 font-medium">You receive</label>
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 min-w-[120px]">
+              <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                <span className="text-lg">{toCurrency.flag}</span>
+              </div>
+              <div className="flex items-center gap-1 font-medium">
+                {toCurrency.code}
+                <ChevronDown size={16} className="text-gray-500" />
+              </div>
+            </div>
+            
             <Input
               type="text"
               value={toAmount}
               readOnly
               placeholder="0.00"
-              className="text-xl font-medium border-none bg-transparent p-0 focus-visible:outline-none focus-visible:ring-0 flex-1"
+              className="text-2xl font-medium text-right border-none bg-transparent p-0 focus-visible:outline-none focus-visible:ring-0 w-auto max-w-[150px]"
             />
-            <CurrencySelector
-              label=""
-              selectedCurrency={toCurrency}
-              currencies={fiatCurrencies}
-              onCurrencyChange={handleToCurrencyChange}
-              className="min-w-[120px]"
-            />
+          </div>
+          
+          <div className="mt-2 text-right">
+            <span className="text-xs text-gray-500">
+              Estimated value
+            </span>
           </div>
         </div>
       </div>
       
+      {/* Swap Button */}
       <Button 
-        className="w-full py-6 mt-6 bg-brand-primary hover:bg-brand-primary/90 text-white rounded-xl text-base flex items-center justify-center gap-2"
+        className="w-full py-6 mt-6 bg-blue-500 hover:bg-blue-600 text-white rounded-xl text-base font-medium flex items-center justify-center gap-2"
         disabled={!fromAmount || isLoading}
       >
         {isLoading ? (
@@ -176,15 +175,11 @@ const SwapCard = () => {
           </>
         ) : (
           <>
-            <Lock size={18} className="mr-1" />
-            Swap
+            Swap Now
+            <ArrowRight size={18} />
           </>
         )}
       </Button>
-      
-      <div className="mt-4 text-xs text-center text-gray-500">
-        By swapping, you agree to our <a href="#" className="text-brand-primary hover:underline">Terms of Service</a>
-      </div>
     </div>
   );
 };
