@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Loader2, Lock, ArrowDownUp } from "lucide-react";
+import { Loader2, Lock, ArrowDownUp, Coins } from "lucide-react";
 import CurrencySelector from "./CurrencySelector";
 import { cn } from "@/lib/utils";
 
@@ -15,13 +15,23 @@ export type Currency = {
   flag?: string;
 };
 
-// Sample currency data
+// Updated currency data with proper flags and icons
 const cryptoCurrencies: Currency[] = [
-  { id: 'sui', name: 'Sui', code: 'SUI', flag: '🔷' },
+  { 
+    id: 'sui', 
+    name: 'Sui', 
+    code: 'SUI', 
+    icon: <Coins className="text-sui-DEFAULT" size={20} /> 
+  },
 ];
 
 const fiatCurrencies: Currency[] = [
-  { id: 'ngn', name: 'Nigerian Naira', code: 'NGN', flag: '🇳🇬' },
+  { 
+    id: 'ngn', 
+    name: 'Nigerian Naira', 
+    code: 'NGN', 
+    flag: '🇳🇬' 
+  },
 ];
 
 const SwapCard = () => {
