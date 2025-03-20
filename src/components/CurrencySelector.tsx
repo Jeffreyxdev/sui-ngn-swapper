@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type Currency = {
+export type Currency = {
   id: string;
   name: string;
   code: string;

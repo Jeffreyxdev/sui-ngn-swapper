@@ -6,19 +6,28 @@ import { ArrowDown, CircleCheck, Info, Wallet } from "lucide-react";
 import CurrencySelector from "./CurrencySelector";
 import { cn } from "@/lib/utils";
 
+// Define the Currency type to match CurrencySelector component
+type Currency = {
+  id: string;
+  name: string;
+  code: string;
+  icon?: React.ReactNode;
+  flag?: string;
+};
+
 // Sample currency data
-const cryptoCurrencies = [
+const cryptoCurrencies: Currency[] = [
   { id: 'sui', name: 'Sui', code: 'SUI', flag: '🔷' },
 ];
 
-const fiatCurrencies = [
+const fiatCurrencies: Currency[] = [
   { id: 'ngn', name: 'Nigerian Naira', code: 'NGN', flag: '🇳🇬' },
 ];
 
 const SwapCard = () => {
   // State for form values
-  const [fromCurrency, setFromCurrency] = useState(cryptoCurrencies[0]);
-  const [toCurrency, setToCurrency] = useState(fiatCurrencies[0]);
+  const [fromCurrency, setFromCurrency] = useState<Currency>(cryptoCurrencies[0]);
+  const [toCurrency, setToCurrency] = useState<Currency>(fiatCurrencies[0]);
   const [fromAmount, setFromAmount] = useState('');
   const [toAmount, setToAmount] = useState('');
   const [balance, setBalance] = useState('0.5354');
@@ -52,6 +61,15 @@ const SwapCard = () => {
     }, 1500);
   };
 
+  // Define the handler functions with proper typing
+  const handleFromCurrencyChange = (currency: Currency) => {
+    setFromCurrency(currency);
+  };
+
+  const handleToCurrencyChange = (currency: Currency) => {
+    setToCurrency(currency);
+  };
+
   const inputAnimationClasses = "transition-all duration-300 ease-in-out transform hover:scale-[1.01] focus-within:scale-[1.01]";
 
   return (
@@ -80,7 +98,7 @@ const SwapCard = () => {
               label=""
               selectedCurrency={fromCurrency}
               currencies={cryptoCurrencies}
-              onCurrencyChange={setFromCurrency}
+              onCurrencyChange={handleFromCurrencyChange}
               className="min-w-[120px]"
             />
           </div>
@@ -117,7 +135,7 @@ const SwapCard = () => {
               label=""
               selectedCurrency={toCurrency}
               currencies={fiatCurrencies}
-              onCurrencyChange={setToCurrency}
+              onCurrencyChange={handleToCurrencyChange}
               className="min-w-[120px]"
             />
           </div>
