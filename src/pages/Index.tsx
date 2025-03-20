@@ -1,10 +1,10 @@
-
 import React from 'react';
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import SwapCard from "@/components/SwapCard";
+import ParticlesBackground from "@/components/ParticlesBackground";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Award, RefreshCw, Clock, Users, ExternalLink } from "lucide-react";
+import { ArrowRight, Award, RefreshCw, Clock, Users, ExternalLink, Lock } from "lucide-react";
 
 const Index = () => {
   const supportedCryptos = [
@@ -12,7 +12,10 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white relative overflow-hidden">
+      {/* Particles Background */}
+      <ParticlesBackground />
+      
       <Navbar />
       
       {/* Hero Section */}
@@ -44,7 +47,7 @@ const Index = () => {
                     ))}
                   </div>
                   
-                  <div className="bg-gray-50 rounded-lg p-4 border border-gray-100">
+                  <div className="bg-white/50 backdrop-blur-sm rounded-lg p-4 border border-gray-200/50 shadow-sm">
                     <div className="flex items-start space-x-3">
                       <RefreshCw size={20} className="text-brand-primary mt-0.5 flex-shrink-0" />
                       <div>
@@ -57,10 +60,15 @@ const Index = () => {
                   </div>
                 </div>
                 
-                <div className="flex flex-wrap gap-4">
+                <div className="flex flex-wrap gap-4 items-center">
                   <Button className="flex items-center bg-brand-primary hover:bg-brand-primary/90 text-white">
                     View Exchange Rates <ExternalLink size={16} className="ml-2" />
                   </Button>
+                  
+                  <div className="inline-flex items-center px-4 py-2 rounded-lg bg-white/70 backdrop-blur-md border border-gray-200/50 shadow-sm">
+                    <Lock size={16} className="text-brand-primary mr-2" />
+                    <span className="text-sm font-medium text-gray-700">Secure Transactions</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -73,7 +81,7 @@ const Index = () => {
       </section>
       
       {/* Features Section */}
-      <section id="about" className="py-16 bg-gray-50">
+      <section id="about" className="py-16 bg-gray-50/80 backdrop-blur-sm relative">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">Why Choose SUIFI.NG</h2>
@@ -84,7 +92,7 @@ const Index = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Feature 1 */}
-            <div className="card-highlight animate-fade-in">
+            <div className="glass-panel rounded-2xl p-6 animate-fade-in">
               <Clock size={28} className="text-brand-primary mb-4" />
               <h3 className="text-xl font-semibold mb-2">Fast Transactions</h3>
               <p className="text-gray-600">
@@ -93,7 +101,7 @@ const Index = () => {
             </div>
             
             {/* Feature 2 */}
-            <div className="card-highlight animate-fade-in animation-delay-200">
+            <div className="glass-panel rounded-2xl p-6 animate-fade-in animation-delay-200">
               <Award size={28} className="text-brand-primary mb-4" />
               <h3 className="text-xl font-semibold mb-2">Best Rates</h3>
               <p className="text-gray-600">
@@ -102,11 +110,11 @@ const Index = () => {
             </div>
             
             {/* Feature 3 */}
-            <div className="card-highlight animate-fade-in animation-delay-300">
-              <Users size={28} className="text-brand-primary mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Dedicated Support</h3>
+            <div className="glass-panel rounded-2xl p-6 animate-fade-in animation-delay-300">
+              <Lock size={28} className="text-brand-primary mb-4" />
+              <h3 className="text-xl font-semibold mb-2">Secure Platform</h3>
               <p className="text-gray-600">
-                Our customer service team is always available to assist you with any questions or issues.
+                Our platform utilizes advanced security measures to protect your transactions and personal information.
               </p>
             </div>
           </div>
@@ -120,7 +128,7 @@ const Index = () => {
       </section>
       
       {/* FAQ Section */}
-      <section id="faq" className="py-16">
+      <section id="faq" className="py-16 bg-white/80 backdrop-blur-sm">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">Frequently Asked Questions</h2>
@@ -158,7 +166,7 @@ const Index = () => {
       </section>
       
       {/* Footer */}
-      <footer className="bg-gray-50 border-t border-gray-200 py-12">
+      <footer className="bg-gray-50/80 backdrop-blur-sm border-t border-gray-200/50 py-12">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-6 md:mb-0">
@@ -229,3 +237,4 @@ const Index = () => {
 };
 
 export default Index;
+

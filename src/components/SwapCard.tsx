@@ -1,13 +1,13 @@
 
-import React, { useState, useEffect } from 'react';
-import { Button } from "@/components/ui/button";
+import React, { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
-import { ArrowDown, CircleCheck, Info, Wallet } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Loader2, Lock, ArrowDownUp } from "lucide-react";
 import CurrencySelector from "./CurrencySelector";
 import { cn } from "@/lib/utils";
 
 // Define the Currency type to match CurrencySelector component
-type Currency = {
+export type Currency = {
   id: string;
   name: string;
   code: string;
@@ -31,33 +31,34 @@ const SwapCard = () => {
   const [fromAmount, setFromAmount] = useState('');
   const [toAmount, setToAmount] = useState('');
   const [balance, setBalance] = useState('0.5354');
+  const [rate, setRate] = useState(750);
   const [isLoading, setIsLoading] = useState(false);
-  const [rate, setRate] = useState(1528250); // Sample rate: 1 SUI = 1,528,250 NGN
 
-  // Calculate the opposite value when an amount changes
+  // Update the toAmount when fromAmount changes based on rate
   useEffect(() => {
-    if (fromAmount) {
-      const calculatedToAmount = (parseFloat(fromAmount) * rate).toFixed(2);
-      setToAmount(calculatedToAmount);
+    if (fromAmount && !isNaN(parseFloat(fromAmount))) {
+      const convertedAmount = (parseFloat(fromAmount) * rate).toFixed(2);
+      setToAmount(convertedAmount);
     } else {
       setToAmount('');
     }
   }, [fromAmount, rate]);
 
+  // Handler for from input change
   const handleFromAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (value === '' || /^\d*\.?\d*$/.test(value)) { // Allow empty or numeric with decimal
+    if (value === '' || /^\d*\.?\d*$/.test(value)) {
       setFromAmount(value);
     }
   };
 
-  const handleSwap = () => {
+  // Swap the currencies
+  const handleSwapCurrencies = () => {
+    // Since we're restricting to SUI -> NGN, we won't actually swap
+    // But we'll show the animation for UX purposes
     setIsLoading(true);
-    
-    // Simulate API call
     setTimeout(() => {
       setIsLoading(false);
-      // Show success message or update UI
     }, 1500);
   };
 
@@ -73,26 +74,32 @@ const SwapCard = () => {
   const inputAnimationClasses = "transition-all duration-300 ease-in-out transform hover:scale-[1.01] focus-within:scale-[1.01]";
 
   return (
-    <div className="card-panel bg-white/90 backdrop-blur-md max-w-md w-full mx-auto animate-fade-in shadow-lg hover:shadow-xl transition-all duration-300">
+    <div className="glass-panel rounded-2xl p-6 shadow-lg">
       <div className="flex justify-between items-center mb-6">
-        <h3 className="text-xl font-semibold text-gray-800">Swap</h3>
-        <div className="text-sm text-gray-500 flex items-center">
-          <Wallet size={16} className="mr-1" />
-          <span>Balance: {balance} SUI</span>
+        <h3 className="text-xl font-semibold">Swap</h3>
+        <div className="flex items-center text-brand-primary">
+          <Lock size={16} className="mr-1" />
+          <span className="text-sm">Secure</span>
         </div>
       </div>
-
-      <div className="space-y-6">
-        {/* From Currency Section */}
-        <div className={cn("rounded-xl border border-gray-200 p-4", inputAnimationClasses)}>
-          <label className="block text-sm font-medium text-gray-500 mb-2">You send</label>
+      
+      <div className="space-y-5 relative">
+        {/* From Currency Input */}
+        <div className={cn("p-4 rounded-xl bg-white/70 backdrop-blur-md border border-gray-200/40 shadow-sm", inputAnimationClasses)}>
+          <div className="flex justify-between items-center mb-2">
+            <label className="text-sm text-gray-500 font-medium">From</label>
+            <div className="text-sm text-gray-500">
+              Balance: {balance} {fromCurrency.code}
+            </div>
+          </div>
+          
           <div className="flex items-center">
             <Input
               type="text"
               value={fromAmount}
               onChange={handleFromAmountChange}
               placeholder="0.00"
-              className="text-2xl font-medium bg-transparent border-none focus-visible:ring-0 p-0 h-auto placeholder:text-gray-300"
+              className="text-xl font-medium border-none bg-transparent p-0 focus-visible:outline-none focus-visible:ring-0 flex-1"
             />
             <CurrencySelector
               label=""
@@ -102,34 +109,40 @@ const SwapCard = () => {
               className="min-w-[120px]"
             />
           </div>
-          <div className="flex justify-end mt-2">
-            <button 
-              className="text-xs text-brand-primary hover:text-brand-primary/80 transition-colors"
-              onClick={() => setFromAmount(balance)}
-            >
-              MAX
-            </button>
-          </div>
         </div>
-
-        {/* Swap Direction Indicator */}
-        <div className="relative flex justify-center">
-          <div className="absolute left-1/2 transform -translate-x-1/2 -mt-3 bg-white rounded-full p-2 shadow-md">
-            <ArrowDown size={20} className="text-gray-500" />
-          </div>
-          <div className="w-full border-t border-gray-100 mt-3"></div>
+        
+        {/* Swap Button */}
+        <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+          <Button
+            onClick={handleSwapCurrencies}
+            size="sm"
+            className="rounded-full bg-gray-50 text-gray-500 hover:text-brand-primary hover:bg-white border border-gray-200 shadow-md w-10 h-10 p-0 flex items-center justify-center"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <Loader2 size={18} className="animate-spin" />
+            ) : (
+              <ArrowDownUp size={18} />
+            )}
+          </Button>
         </div>
-
-        {/* To Currency Section */}
-        <div className={cn("rounded-xl border border-gray-200 p-4", inputAnimationClasses)}>
-          <label className="block text-sm font-medium text-gray-500 mb-2">You receive</label>
+        
+        {/* To Currency Input */}
+        <div className={cn("p-4 rounded-xl bg-white/70 backdrop-blur-md border border-gray-200/40 shadow-sm", inputAnimationClasses)}>
+          <div className="flex justify-between items-center mb-2">
+            <label className="text-sm text-gray-500 font-medium">To</label>
+            <div className="text-sm text-gray-500">
+              Rate: 1 {fromCurrency.code} = {rate} {toCurrency.code}
+            </div>
+          </div>
+          
           <div className="flex items-center">
             <Input
               type="text"
               value={toAmount}
               readOnly
               placeholder="0.00"
-              className="text-2xl font-medium bg-transparent border-none focus-visible:ring-0 p-0 h-auto placeholder:text-gray-300"
+              className="text-xl font-medium border-none bg-transparent p-0 focus-visible:outline-none focus-visible:ring-0 flex-1"
             />
             <CurrencySelector
               label=""
@@ -139,43 +152,28 @@ const SwapCard = () => {
               className="min-w-[120px]"
             />
           </div>
-          <div className="text-xs text-gray-500 mt-2">
-            Estimated value
-          </div>
         </div>
-
-        {/* Exchange Rate */}
-        <div className="flex justify-between text-sm text-gray-500 px-1">
-          <span>Exchange Rate</span>
-          <span className="font-medium">1 SUI ≈ {rate.toLocaleString()} NGN</span>
-        </div>
-
-        {/* Action Button */}
-        <Button 
-          onClick={handleSwap}
-          disabled={!fromAmount || isLoading || parseFloat(fromAmount) <= 0}
-          className="w-full py-6 bg-brand-primary hover:bg-brand-primary/90 text-white text-lg font-semibold rounded-xl transition-all duration-300 shadow-md hover:shadow-lg disabled:opacity-70 disabled:cursor-not-allowed"
-        >
-          {isLoading ? (
-            <span className="flex items-center justify-center">
-              <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Processing...
-            </span>
-          ) : (
-            <span>Swap Now</span>
-          )}
-        </Button>
-
-        {/* Additional Information */}
-        <div className="flex items-start space-x-2 text-xs text-gray-500 bg-gray-50 p-3 rounded-lg">
-          <Info size={16} className="text-gray-400 mt-0.5 flex-shrink-0" />
-          <div>
-            By completing this transaction, you agree to SUIFI.NG's terms of service and privacy policy. Rates may fluctuate during transaction processing.
-          </div>
-        </div>
+      </div>
+      
+      <Button 
+        className="w-full py-6 mt-6 bg-brand-primary hover:bg-brand-primary/90 text-white rounded-xl text-base flex items-center justify-center gap-2"
+        disabled={!fromAmount || isLoading}
+      >
+        {isLoading ? (
+          <>
+            <Loader2 size={18} className="animate-spin mr-2" />
+            Processing...
+          </>
+        ) : (
+          <>
+            <Lock size={18} className="mr-1" />
+            Swap
+          </>
+        )}
+      </Button>
+      
+      <div className="mt-4 text-xs text-center text-gray-500">
+        By swapping, you agree to our <a href="#" className="text-brand-primary hover:underline">Terms of Service</a>
       </div>
     </div>
   );
