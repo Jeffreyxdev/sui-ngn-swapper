@@ -54,8 +54,8 @@ const Hero = () => {
           <div className="text-center mb-12">
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight animate-slide-up">
               <span className="block">Swap SUI to</span>
-              <span className="text-brand-primary">Nigerian Naira</span>
-              <span className="block">Seamlessly</span>
+              <span className="text-green-600">Nigerian Naira</span>
+              <span className="block pencil" >Seamlessly</span>
             </h1>
             
             <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto animate-slide-up animation-delay-200">
