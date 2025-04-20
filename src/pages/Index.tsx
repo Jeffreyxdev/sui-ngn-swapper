@@ -1,7 +1,8 @@
 import React from 'react';
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import SwapCard from "@/components/SwapCard";
+import { Link } from 'react-router-dom';
+
 import ParticlesBackground from "@/components/ParticlesBackground";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Award, RefreshCw, Clock, Users, ExternalLink, Lock } from "lucide-react";
@@ -22,15 +23,15 @@ const Index = () => {
       <Hero />
       
       {/* Swap Interface Section */}
-      <section id="exchange" className="py-16 relative overflow-hidden">
+      <section id="exchange" className="py-16  overflow-hidden items-center ">
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
+          <div className="flex flex-col  items-center justify-between gap-12">
             <div className="w-full lg:w-1/2 order-2 lg:order-1 animate-slide-up">
               <div className="max-w-lg">
                 <h2 className="text-3xl sm:text-4xl font-bold mb-6 leading-tight">
                   Swap Crypto to Fiat <span className="text-brand-primary">Instantly</span>
                 </h2>
-                <p className="text-lg text-gray-600 mb-8">
+                <p className="text-lg text-gray-600 mb-8 text-center">
                   Exchange cryptocurrencies for local currencies with just a few clicks. Get the best rates and fast transactions every time.
                 </p>
                 
@@ -73,9 +74,7 @@ const Index = () => {
               </div>
             </div>
             
-            <div className="w-full lg:w-1/2 order-1 lg:order-2">
-              <SwapCard />
-            </div>
+           
           </div>
         </div>
       </section>
@@ -119,10 +118,11 @@ const Index = () => {
             </div>
           </div>
           
-          <div className="text-center mt-12">
+          <div className="text-center mt-12"> 
+            <Link to='/exchange'>
             <Button className="button-primary flex items-center mx-auto">
               Get Started <ArrowRight size={18} className="ml-1" />
-            </Button>
+            </Button></Link>
           </div>
         </div>
       </section>
@@ -186,9 +186,10 @@ const Index = () => {
                 <h4 className="font-semibold text-gray-900 mb-3">Quick Links</h4>
                 <ul className="space-y-2">
                   <li><a href="/" className="text-gray-600 hover:text-brand-primary text-sm">Home</a></li>
-                  <li><a href="#exchange" className="text-gray-600 hover:text-brand-primary text-sm">Exchange</a></li>
+                  <li><a href="/exchange" className="text-gray-600 hover:text-brand-primary text-sm">Exchange</a></li>
                   <li><a href="#about" className="text-gray-600 hover:text-brand-primary text-sm">About</a></li>
                   <li><a href="#faq" className="text-gray-600 hover:text-brand-primary text-sm">FAQ</a></li>
+                  <li><a href="/docs" className="text-gray-600 hover:text-brand-primary text-sm">DOCS</a></li>
                 </ul>
               </div>
               
@@ -196,7 +197,7 @@ const Index = () => {
                 <h4 className="font-semibold text-gray-900 mb-3">Contact</h4>
                 <ul className="space-y-2">
                   <li><a href="mailto:support@suifi.ng" className="text-gray-600 hover:text-brand-primary text-sm">support@suifi.ng</a></li>
-                  <li><span className="text-gray-600 text-sm">Lagos, Nigeria</span></li>
+                  <li><span className="text-gray-600 text-sm">Port Harcourt, Nigeria</span></li>
                 </ul>
               </div>
             </div>

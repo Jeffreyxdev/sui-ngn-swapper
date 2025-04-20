@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
-
+import { Link } from 'react-router-dom';
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -46,7 +46,7 @@ const Navbar = () => {
             <a href="/" className="px-4 py-2 text-gray-700 hover:text-brand-primary transition-colors">
               Home
             </a>
-            <a href="#exchange" className="px-4 py-2 text-gray-700 hover:text-brand-primary transition-colors">
+            <a href="/exchange" className="px-4 py-2 text-gray-700 hover:text-brand-primary transition-colors">
               Exchange
             </a>
             <a href="#about" className="px-4 py-2 text-gray-700 hover:text-brand-primary transition-colors">
@@ -60,9 +60,9 @@ const Navbar = () => {
 
         <div className="flex items-center space-x-4 animate-fade-in">
           <Button 
-            className="hidden md:flex bg-brand-primary hover:bg-brand-primary/90 text-white transition-all duration-300 rounded-full px-6"
-          >
-            Start Swapping
+            className="hidden md:flex bg-brand-primary hover:bg-brand-primary/90 text-white transition-all duration-300 rounded-full px-5"
+          ><Link to={'/docs'}>
+            Docs</Link>
           </Button>
           
           {isMobile && (
@@ -89,7 +89,7 @@ const Navbar = () => {
               Home
             </a>
             <a 
-              href="#exchange" 
+              href="/exchange" 
               className="text-xl font-medium text-gray-900 hover:text-brand-primary transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >

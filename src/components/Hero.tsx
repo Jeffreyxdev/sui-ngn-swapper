@@ -3,6 +3,7 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { ChevronRight, Zap, Shield, RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Link } from 'react-router-dom';
 
 interface FeaturePillProps {
   icon: React.ReactNode;
@@ -63,11 +64,11 @@ const Hero = () => {
             </p>
             
             <div className="flex flex-wrap justify-center gap-4 animate-slide-up animation-delay-300">
-              <Button className="button-primary flex items-center">
+             <Link to='/exchange'> <Button className="button-primary flex items-center">
                 Start Swapping <ChevronRight size={18} className="ml-1" />
-              </Button>
-              <Button variant="outline" className="button-secondary">
-                Learn More
+              </Button></Link>
+              <Button  variant="outline" className="button-secondary" ><a href="#about">
+                Learn More</a>
               </Button>
             </div>
           </div>

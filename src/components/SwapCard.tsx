@@ -40,8 +40,8 @@ const SwapCard = () => {
   const [toCurrency, setToCurrency] = useState<Currency>(fiatCurrencies[0]);
   const [fromAmount, setFromAmount] = useState('');
   const [toAmount, setToAmount] = useState('');
-  const [balance, setBalance] = useState('0.5354');
-  const [rate, setRate] = useState(750);
+  const [balance, setBalance] = useState('');
+  const [rate, setRate] = useState(2000);
   const [isLoading, setIsLoading] = useState(false);
 
   // Update the toAmount when fromAmount changes based on rate
