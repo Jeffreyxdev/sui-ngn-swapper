@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
 const { SuiClient, getFullnodeUrl } = require('@mysten/sui.js/client');
-const { db } = require('./FIrebase'); // Import Firebase
+const { db } = require('./FIrebase');
 const { doc, getDoc, updateDoc, setDoc } = require('firebase/firestore');
 
 // Initialize Express app
@@ -13,7 +13,15 @@ const PORT = 3000;
 app.use(express.json());
 
 // SUI setup
-const provider = new SuiClient({ url: getFullnodeUrl('testnet') }); // Match frontend network (testnet)
+const provider = new SuiClient({ url: getFullnodeUrl('testnet') });
+
+// Validate SUI_ADDRESS_TO_WATCH
+const SUI_ADDRESS_TO_WATCH = process.env.SUI_ADDRESS_TO_WATCH;
+if (!SUI_ADDRESS_TO_WATCH || !SUI_ADDRESS_TO_WATCH.match(/^0x[0-9a-fA-F]{64}$/)) {
+  console.error('Error: SUI_ADDRESS_TO_WATCH is not a valid Sui address or is undefined.');
+  console.error('SUI_ADDRESS_TO_WATCH:', SUI_ADDRESS_TO_WATCH);
+  process.exit(1);
+}
 
 // Store processed transaction digests to prevent duplicates
 const processedTxns = new Set();
@@ -59,10 +67,12 @@ app.post('/api/map', async (req, res) => {
 async function monitorSuiTransfers() {
   setInterval(async () => {
     try {
+      console.log('Querying transactions for address:', SUI_ADDRESS_TO_WATCH);
+
       // Fetch transactions for the watched address
       const txns = await provider.queryTransactionBlocks({
         filter: {
-          ToAddress: process.env.SUI_ADDRESS_TO_WATCH,
+          ToAddress: SUI_ADDRESS_TO_WATCH,
         },
         options: {
           showEffects: true,
@@ -70,7 +80,7 @@ async function monitorSuiTransfers() {
           showEvents: true,
           showBalanceChanges: true,
         },
-        limit: 10, // Fetch the latest 10 transactions
+        limit: 10,
         order: 'descending',
       });
 
@@ -150,7 +160,7 @@ function extractAmount(tx) {
     const change = balanceChanges.find(
       (c) =>
         c.coinType === '0x2::sui::SUI' &&
-        c.owner.AddressOwner === process.env.SUI_ADDRESS_TO_WATCH
+        c.owner.AddressOwner === SUI_ADDRESS_TO_WATCH
     );
 
     if (!change || !change.amount) {
@@ -177,9 +187,9 @@ async function convertSuiToNgn(amountSui) {
     });
 
     const marketPrice = res.data.sui.ngn;
-    const adjustedPrice = marketPrice * 0.94; // Adjust for 6% fee (consistent with frontend)
+    const adjustedPrice = marketPrice * 0.94; // Adjust for 6% fee
     const amountNgn = amountSui * adjustedPrice;
-    return Math.floor(amountNgn); // Round down to avoid decimal issues
+    return Math.floor(amountNgn); // Round down
   } catch (err) {
     console.error('Error converting SUI to NGN:', err.message);
     return null;

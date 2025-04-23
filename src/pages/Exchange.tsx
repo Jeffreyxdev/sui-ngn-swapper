@@ -1,31 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { toB64 } from '@mysten/bcs';
 import { Loader2, ArrowDownUp, ArrowRight } from "lucide-react";
+import { WalletProvider, useWallet, ConnectButton } from '@suiet/wallet-kit';
 import '@suiet/wallet-kit/style.css';
-import {
-  SuiClientProvider,
-  WalletProvider,
-  ConnectButton,
-  useCurrentWallet,
-  useSignAndExecuteTransaction,
-  useSuiClient,
-  useWallets,
-} from '@suiet/wallet-kit';
 import { TransactionBlock } from '@mysten/sui.js/transactions';
-import { createNetworkConfig } from '@mysten/dapp-kit';
+import { SuiClient } from '@mysten/sui.js/client';
 import axios from 'axios';
 import Navbar from '@/components/Navbar';
 import ParticlesBackground from '@/components/ParticlesBackground';
-import { db } from './Firebase'; // Import Firebase
+import { db } from './Firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { Buffer } from 'buffer'; // Import Buffer for base64 encoding
 
-// Define Sui network
-const { networkConfig } = createNetworkConfig({
-  testnet: {
-    url: 'https://fullnode.testnet.sui.io/',
-  },
-});
+// Initialize SuiClient manually since @suiet/wallet-kit doesn't provide SuiClientProvider
+const suiClient = new SuiClient({ url: 'https://fullnode.testnet.sui.io/' });
 
 export type Currency = {
   id: string;
@@ -54,15 +44,11 @@ const cryptoCurrencies: Currency[] = [
 ];
 
 const Swap = () => {
-  const { currentWallet, connectionStatus } = useCurrentWallet();
-  const { mutateAsync: signAndExecuteTransaction } = useSignAndExecuteTransaction();
-  const suiClient = useSuiClient();
-  const wallets = useWallets();
+  const wallet = useWallet();
+  const connected = wallet.connected;
+  const address = wallet.account?.address;
 
-  const connected = connectionStatus === 'connected';
-  const address = currentWallet?.accounts?.[0]?.address;
-
-  const [fromCurrency, setFromCurrency] = useState(cryptoCurrencies[0]);
+  const [fromCurrency] = useState(cryptoCurrencies[0]);
   const [toCurrency, setToCurrency] = useState(fiatCurrencies[0]);
   const [fromAmount, setFromAmount] = useState('');
   const [toAmount, setToAmount] = useState('');
@@ -73,12 +59,17 @@ const Swap = () => {
   const [status, setStatus] = useState('');
   const [error, setError] = useState('');
 
-  // Debug: Log available wallets
+  // Debug: Log wallet info
   useEffect(() => {
-    console.log("Available wallets:", wallets);
-  }, [wallets]);
+    console.log("Wallet:", wallet);
+  }, [wallet]);
 
-  // Fetch Naira Vault balance from Firebase when wallet connectsJonnects
+  // Debug: Log environment variable
+  useEffect(() => {
+    console.log("VITE_RECEIVER_ADDRESS:", import.meta.env.VITE_RECEIVER_ADDRESS);
+  }, []);
+
+  // Fetch Naira Vault balance from Firebase when wallet connects
   useEffect(() => {
     const fetchVaultBalance = async () => {
       if (!connected || !address) {
@@ -130,7 +121,7 @@ const Swap = () => {
     };
 
     fetchBalance();
-  }, [connected, address, suiClient]);
+  }, [connected, address]);
 
   // Update toAmount based on fromAmount and rate
   useEffect(() => {
@@ -191,10 +182,18 @@ const Swap = () => {
       return;
     }
 
-    if (!process.env.REACT_APP_RECEIVER_ADDRESS) {
+    if (!import.meta.env.VITE_RECEIVER_ADDRESS) {
       setError("Receiver address is not configured. Please contact support.");
       return;
     }
+
+    if (!wallet.account || !wallet.account.address) {
+      setError("Wallet account or address not found. Please reconnect your wallet.");
+      return;
+    }
+
+    const senderAddress = wallet.account.address;
+    console.log("Sender address:", senderAddress);
 
     setIsLoading(true);
     setStatus('Sending SUI...');
@@ -205,15 +204,39 @@ const Swap = () => {
       const amountInMist = Math.floor(amount * 1_000_000_000);
       
       const [coin] = tx.splitCoins(tx.gas, [tx.pure(amountInMist)]);
-      tx.transferObjects([coin], tx.pure.address(process.env.REACT_APP_RECEIVER_ADDRESS));
+      tx.transferObjects([coin], tx.pure(import.meta.env.VITE_RECEIVER_ADDRESS));
+      tx.setGasBudget(1000000000); // 1 SUI in MIST for gas
 
-      const result = await signAndExecuteTransaction({
-        transaction: tx,
-        options: { showEffects: true, showObjectChanges: true },
+      // Explicitly set the sender on the TransactionBlock
+      tx.setSender(senderAddress);
+      console.log("Transaction sender set to:", senderAddress);
+
+      // Build the transaction as raw bytes (Uint8Array)
+      const txBytes = await tx.build({
+        client: suiClient,
+        protocolConfig: undefined,
+        onlyTransactionKind: false,
       });
+      console.log("Transaction bytes:", txBytes);
+
+      // Convert the raw bytes to base64 using Buffer
+      const txBase64 = Buffer.from(txBytes).toString('base64');
+      console.log("Transaction base64:", txBase64);
+
+      // Sign and execute the transaction with the base64 string
+      const result = await wallet.signAndExecuteTransactionBlock({
+        transactionBlock: txBase64,
+        account: wallet.account,
+        chain: 'sui:testnet',
+        options: {
+          showEffects: true,
+          showObjectChanges: true,
+        },
+      });
+      console.log("Transaction result:", result);
 
       if (result.effects?.status?.status !== 'success') {
-        throw new Error('Transaction failed');
+        throw new Error('Transaction failed: ' + (result.effects?.status?.error || 'Unknown error'));
       }
 
       setStatus('Awaiting NGN credit...');
@@ -232,9 +255,9 @@ const Swap = () => {
 
       setStatus('Swap successful');
     } catch (err) {
-      console.error("Swap failed:", err);
+      console.error("Swap failed - Full error:", err);
       setStatus('Swap failed');
-      setError(err.message || 'An error occurred during the swap.');
+      setError(err.message || 'An error occurred during the swap. Check the console for details.');
     } finally {
       setIsLoading(false);
     }
@@ -256,7 +279,7 @@ const Swap = () => {
               <Button
                 size="sm"
                 variant="outline"
-                onClick={() => window.location.reload()}
+                onClick={() => wallet.disconnect()}
               >
                 Disconnect
               </Button>
@@ -353,17 +376,87 @@ const Swap = () => {
         )}
       </div>
 
-      
+      {/* Custom Styling for ConnectButton Modal */}
+      <style jsx global>{`
+        .connect-modal {
+          position: fixed !important;
+          top: 50% !important;
+          left: 50% !important;
+          transform: translate(-50%, -50%) !important;
+          background: white !important;
+          border-radius: 16px !important;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
+          padding: 24px !important;
+          width: 90% !important;
+          max-width: 400px !important;
+          z-index: 1000 !important;
+        }
+        .connect-modal ul {
+          list-style: none !important;
+          padding: 0 !important;
+          margin: 0 !important;
+        }
+        .connect-modal li {
+          display: flex !important;
+          align-items: center !important;
+          gap: 12px !important;
+          padding: 12px !important;
+          border-bottom: 1px solid #eee !important;
+          cursor: pointer !important;
+          transition: background 0.2s !important;
+        }
+        .connect-modal li:last-child {
+          border-bottom: none !important;
+        }
+        .connect-modal li:hover {
+          background: #f5f5f5 !important;
+        }
+        .connect-modal img {
+          width: 24px !important;
+          height: 24px !important;
+          border-radius: 4px !important;
+        }
+        .connect-modal span {
+          font-size: 16px !important;
+          font-weight: 500 !important;
+          color: #333 !important;
+        }
+        .connect-modal .wallet-info {
+          margin-top: 20px !important;
+          padding-top: 16px !important;
+          border-top: 1px solid #eee !important;
+        }
+        .connect-modal .wallet-info h3 {
+          font-size: 14px !important;
+          font-weight: 600 !important;
+          color: #555 !important;
+          margin-bottom: 8px !important;
+        }
+        .connect-modal .wallet-info p {
+          font-size: 12px !important;
+          color: #666 !important;
+          line-height: 1.5 !important;
+        }
+        .connect-modal-backdrop {
+          position: fixed !important;
+          top: 0 !important;
+          left: 0 !important;
+          width: 100% !important;
+          height: 100% !important;
+          background: rgba(0, 0, 0, 0.5) !important;
+          z-index: 999 !important;
+        }
+      `}</style>
     </div>
   );
 };
 
-const Exchange = () => (
-  <SuiClientProvider networks={networkConfig} defaultNetwork="testnet">
+const Exchange = () => {
+  return (
     <WalletProvider>
       <Swap />
     </WalletProvider>
-  </SuiClientProvider>
-);
+  );
+};
 
 export default Exchange;
