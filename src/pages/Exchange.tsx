@@ -17,7 +17,7 @@ import { createNetworkConfig } from '@mysten/dapp-kit';
 import axios from 'axios';
 import Navbar from '@/components/Navbar';
 import ParticlesBackground from '@/components/ParticlesBackground';
-import { db } from './fire'; // Import Firebase
+import { db } from './Firebase'; // Import Firebase
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 // Define Sui network
