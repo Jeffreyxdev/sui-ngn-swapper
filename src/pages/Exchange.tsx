@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2, ArrowDownUp, ArrowRight } from "lucide-react";
-
+import '@suiet/wallet-kit/style.css';
 import {
   SuiClientProvider,
   WalletProvider,
@@ -11,7 +11,7 @@ import {
   useSignAndExecuteTransaction,
   useSuiClient,
   useWallets,
-} from '@mysten/dapp-kit';
+} from '@suiet/wallet-kit';
 import { TransactionBlock } from '@mysten/sui.js/transactions';
 import { createNetworkConfig } from '@mysten/dapp-kit';
 import axios from 'axios';
