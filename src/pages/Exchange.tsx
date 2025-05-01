@@ -8,11 +8,11 @@ import '@suiet/wallet-kit/style.css';
 import { TransactionBlock } from '@mysten/sui.js/transactions';
 import { SuiClient } from '@mysten/sui.js/client';
 import axios from 'axios';
-import Navbar from '@/components/Navbar';
+
 import ParticlesBackground from '@/components/ParticlesBackground';
 import { db } from './Firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { Buffer } from 'buffer'; // Import Buffer for base64 encoding
+import { Buffer } from 'buffer';
 
 // Initialize SuiClient manually since @suiet/wallet-kit doesn't provide SuiClientProvider
 const suiClient = new SuiClient({ url: 'https://fullnode.testnet.sui.io/' });
@@ -26,21 +26,11 @@ export type Currency = {
 };
 
 const fiatCurrencies: Currency[] = [
-  { 
-    id: 'ngn', 
-    name: 'Nigerian Naira', 
-    code: 'NGN', 
-    flag: 'https://flagcdn.com/w80/ng.png' 
-  },
+  { id: 'ngn', name: 'Nigerian Naira', code: 'NGN', flag: 'https://flagcdn.com/w80/ng.png' },
 ];
 
 const cryptoCurrencies: Currency[] = [
-  { 
-    id: 'sui', 
-    name: 'Sui', 
-    code: 'SUI', 
-    icon: 'https://cryptologos.cc/logos/sui-sui-logo.svg' 
-  },
+  { id: 'sui', name: 'Sui', code: 'SUI', icon: 'https://cryptologos.cc/logos/sui-sui-logo.svg' },
 ];
 
 const Swap = () => {
@@ -52,23 +42,21 @@ const Swap = () => {
   const [toCurrency, setToCurrency] = useState(fiatCurrencies[0]);
   const [fromAmount, setFromAmount] = useState('');
   const [toAmount, setToAmount] = useState('');
-  const [suiBalance, setSuiBalance] = useState<number | null>(null);
+  const [suiBalance, setSuiBalance] = useState(null);
   const [rate, setRate] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [nairaVault, setNairaVault] = useState(0);
   const [status, setStatus] = useState('');
   const [error, setError] = useState('');
+  const [showWithdrawForm, setShowWithdrawForm] = useState(false);
+  const [bankCode, setBankCode] = useState('');
+  const [accountNumber, setAccountNumber] = useState('');
+  const [withdrawAmount, setWithdrawAmount] = useState('');
+  const [withdrawStatus, setWithdrawStatus] = useState('');
 
-  // Debug: Log wallet info
-  useEffect(() => {
-    console.log("Wallet:", wallet);
-  }, [wallet]);
 
-  // Debug: Log environment variable
-  useEffect(() => {
-    console.log("VITE_RECEIVER_ADDRESS:", import.meta.env.VITE_RECEIVER_ADDRESS);
-  }, []);
-
+  const successSound = new Audio('/sounds/success.mp3');
+const failureSound = new Audio('../sounds');
   // Fetch Naira Vault balance from Firebase when wallet connects
   useEffect(() => {
     const fetchVaultBalance = async () => {
@@ -165,7 +153,7 @@ const Swap = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const handleFromAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFromAmountChange = (e) => {
     const val = e.target.value;
     if (val === '' || /^\d*\.?\d*$/.test(val)) {
       setFromAmount(val);
@@ -173,77 +161,105 @@ const Swap = () => {
   };
 
   const handleSwap = async () => {
-    if (!connected) return alert("Connect your wallet first");
-    if (!fromAmount) return alert("Enter an amount to swap");
+  if (!connected) return alert("Connect your wallet first");
+  if (!fromAmount) return alert("Enter an amount to swap");
 
-    const amount = parseFloat(fromAmount);
-    if (suiBalance !== null && amount > suiBalance) {
-      setError(`Insufficient SUI balance. You have ${suiBalance.toFixed(2)} SUI.`);
+  const amount = parseFloat(fromAmount);
+  if (suiBalance !== null && amount > suiBalance) {
+    setError(`Insufficient SUI balance. You have ${suiBalance.toFixed(2)} SUI.`);
+    return;
+  }
+
+  if (!import.meta.env.VITE_RECEIVER_ADDRESS) {
+    setError("Receiver address is not configured. Please contact support.");
+    return;
+  }
+
+  if (!wallet.account || !wallet.account.address) {
+    setError("Wallet account or address not found. Please reconnect your wallet.");
+    return;
+  }
+
+  const senderAddress = wallet.account.address;
+  console.log("Sender address:", senderAddress);
+
+  setIsLoading(true);
+  setStatus('Sending SUI...');
+  setError('');
+
+  try {
+    const tx = new TransactionBlock();
+    const amountInMist = Math.floor(amount * 1_000_000_000);
+
+    const [coin] = tx.splitCoins(tx.gas, [tx.pure(amountInMist)]);
+    tx.transferObjects([coin], tx.pure(import.meta.env.VITE_RECEIVER_ADDRESS));
+
+    // Dynamically set gas budget based on available balance
+    const totalBalanceInMist = Math.floor(suiBalance * 1_000_000_000);
+    const remainingBalanceForGas = totalBalanceInMist - amountInMist;
+    const gasBudget = Math.min(10000000, remainingBalanceForGas - 1000000); // Reserve 0.001 SUI for safety
+    if (gasBudget <= 0) {
+      throw new Error('Insufficient balance for gas fee after transfer.');
+    }
+    tx.setGasBudget(gasBudget);
+    const result = await wallet.signAndExecuteTransactionBlock({
+      transactionBlock: tx,
+      options: {
+        showEffects: true,
+        showObjectChanges: true,
+      },
+    });
+
+    console.log("Transaction result:", result);
+
+    if (result.effects?.status?.status !== 'success') {
+      throw new Error('Transaction failed: ' + (result.effects?.status?.error || 'Unknown error'));
+    }
+
+    setStatus('Awaiting NGN credit...');
+    await axios.post('http://localhost:3000/api/map', {
+      wallet: address,
+      txnHash: result.digest,
+      amount: fromAmount,
+    });
+
+    const vaultRef = doc(db, 'nairaVaults', address.toLowerCase());
+    const vaultDoc = await getDoc(vaultRef);
+    if (vaultDoc.exists()) {
+      setNairaVault(vaultDoc.data().balance || 0);
+    }
+
+    setStatus('Swap successful');
+  } catch (err) {
+    console.error("Swap failed - Full error:", err);
+    setStatus('Swap failed');
+    setError(err.message || 'An error occurred during the swap. Check the console for details.');
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+  const handleWithdraw = async () => {
+    if (!withdrawAmount || !bankCode || !accountNumber) {
+      setWithdrawStatus('Please fill in all fields.');
       return;
     }
 
-    if (!import.meta.env.VITE_RECEIVER_ADDRESS) {
-      setError("Receiver address is not configured. Please contact support.");
+    const amount = parseFloat(withdrawAmount);
+    if (amount > nairaVault) {
+      setWithdrawStatus('Insufficient balance in Naira Vault.');
       return;
     }
-
-    if (!wallet.account || !wallet.account.address) {
-      setError("Wallet account or address not found. Please reconnect your wallet.");
-      return;
-    }
-
-    const senderAddress = wallet.account.address;
-    console.log("Sender address:", senderAddress);
 
     setIsLoading(true);
-    setStatus('Sending SUI...');
-    setError('');
+    setWithdrawStatus('Processing withdrawal...');
 
     try {
-      const tx = new TransactionBlock();
-      const amountInMist = Math.floor(amount * 1_000_000_000);
-      
-      const [coin] = tx.splitCoins(tx.gas, [tx.pure(amountInMist)]);
-      tx.transferObjects([coin], tx.pure(import.meta.env.VITE_RECEIVER_ADDRESS));
-      tx.setGasBudget(1000000000); // 1 SUI in MIST for gas
-
-      // Explicitly set the sender on the TransactionBlock
-      tx.setSender(senderAddress);
-      console.log("Transaction sender set to:", senderAddress);
-
-      // Build the transaction as raw bytes (Uint8Array)
-      const txBytes = await tx.build({
-        client: suiClient,
-        protocolConfig: undefined,
-        onlyTransactionKind: false,
-      });
-      console.log("Transaction bytes:", txBytes);
-
-      // Convert the raw bytes to base64 using Buffer
-      const txBase64 = Buffer.from(txBytes).toString('base64');
-      console.log("Transaction base64:", txBase64);
-
-      // Sign and execute the transaction with the base64 string
-      const result = await wallet.signAndExecuteTransactionBlock({
-        transactionBlock: txBase64,
-        account: wallet.account,
-        chain: 'sui:testnet',
-        options: {
-          showEffects: true,
-          showObjectChanges: true,
-        },
-      });
-      console.log("Transaction result:", result);
-
-      if (result.effects?.status?.status !== 'success') {
-        throw new Error('Transaction failed: ' + (result.effects?.status?.error || 'Unknown error'));
-      }
-
-      setStatus('Awaiting NGN credit...');
-      await axios.post('http://localhost:3000/api/map', {
+      const response = await axios.post('http://localhost:3000/api/withdraw', {
         wallet: address,
-        txnHash: result.digest,
-        amount: fromAmount,
+        bankCode,
+        accountNumber,
+        amount,
       });
 
       // Fetch updated vault balance
@@ -253,21 +269,21 @@ const Swap = () => {
         setNairaVault(vaultDoc.data().balance || 0);
       }
 
-      setStatus('Swap successful');
+      setWithdrawStatus('Withdrawal successful!');
+      setShowWithdrawForm(false);
+      setBankCode('');
+      setAccountNumber('');
+      setWithdrawAmount('');
     } catch (err) {
-      console.error("Swap failed - Full error:", err);
-      setStatus('Swap failed');
-      setError(err.message || 'An error occurred during the swap. Check the console for details.');
+      console.error("Withdrawal failed:", err);
+      setWithdrawStatus(err.response?.data?.error || 'Failed to process withdrawal.');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="overflow-hidden">
-      <Navbar />
-      <ParticlesBackground />
-
+    <div>
       {/* Floating wallet container with Connect + Disconnect */}
       <div className="fixed top-4 right-4 z-50">
         <div className="bg-white border border-gray-200 shadow-lg rounded-full px-4 py-2 flex items-center gap-3">
@@ -298,6 +314,7 @@ const Swap = () => {
 
         {connected ? (
           <>
+          <ParticlesBackground/>
             <div className="space-y-5">
               {/* You Send */}
               <div className="bg-blue-50 p-5 rounded-2xl">
@@ -369,6 +386,54 @@ const Swap = () => {
               <h2 className="text-lg font-bold mb-2">💰 Naira Vault</h2>
               <p className="text-2xl font-semibold text-green-600">₦{nairaVault.toLocaleString()}</p>
               <p className="text-xs text-gray-500 mt-1">Available for withdrawal</p>
+              <Button
+                onClick={() => setShowWithdrawForm(!showWithdrawForm)}
+                className="mt-3 bg-blue-500 text-white rounded-xl font-medium"
+              >
+                {showWithdrawForm ? 'Cancel' : 'Withdraw Naira'}
+              </Button>
+
+              {showWithdrawForm && (
+                <div className="mt-4 space-y-3">
+                  <Input
+                    placeholder="Bank Code (e.g., 044 for Access Bank)"
+                    value={bankCode}
+                    onChange={(e) => setBankCode(e.target.value)}
+                    className="w-full"
+                  />
+                  <Input
+                    placeholder="Account Number"
+                    value={accountNumber}
+                    onChange={(e) => setAccountNumber(e.target.value)}
+                    className="w-full"
+                  />
+                  <Input
+                    placeholder="Amount (NGN)"
+                    value={withdrawAmount}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === '' || /^\d*\.?\d*$/.test(val)) {
+                        setWithdrawAmount(val);
+                      }
+                    }}
+                    className="w-full"
+                  />
+                  <Button
+                    onClick={handleWithdraw}
+                    className="w-full bg-green-500 text-white rounded-xl font-medium"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? (
+                      <><Loader2 size={16} className="animate-spin mr-2" /> Processing...</>
+                    ) : (
+                      'Withdraw'
+                    )}
+                  </Button>
+                  {withdrawStatus && (
+                    <p className="mt-2 text-sm text-center text-gray-500">{withdrawStatus}</p>
+                  )}
+                </div>
+              )}
             </div>
           </>
         ) : (

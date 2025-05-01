@@ -109,3 +109,18 @@
     @apply rounded-2xl p-6 bg-gradient-to-br from-white to-brand-light shadow-md hover:shadow-lg transition-all duration-300;
   }
 }
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-20px);
+  }
+  60% {
+    transform: translateY(-10px);
+  }
+}
+.animate-custom-bounce {
+  animation: bounce 1s ease;
+}
