@@ -22,6 +22,7 @@ const Index = () => {
       {/* Hero Section */}
       <Hero />
       
+      
       {/* Swap Interface Section */}
       <section id="exchange" className="py-16  overflow-hidden items-center ">
         <div className="container mx-auto px-4 sm:px-6">
@@ -29,10 +30,10 @@ const Index = () => {
             <div className="w-full lg:w-1/2 order-2 lg:order-1 animate-slide-up">
               <div className="max-w-lg">
                 <h2 className="text-3xl sm:text-4xl font-bold mb-6 leading-tight">
-                  Swap Crypto to Fiat <span className="text-brand-primary">Instantly</span>
+                  Swap Crypto to cash <span className="text-brand-primary">Instantly</span>
                 </h2>
                 <p className="text-lg text-gray-600 mb-8 text-center">
-                  Exchange cryptocurrencies for local currencies with just a few clicks. Get the best rates and fast transactions every time.
+                  Exchange cryptocurrencies for local currencies with just a few clicks. with unbeatable rates, lightning speed, and zero stress.
                 </p>
                 
                 <div className="mb-8">

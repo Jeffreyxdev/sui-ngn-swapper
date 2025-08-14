@@ -109,6 +109,9 @@
     @apply rounded-2xl p-6 bg-gradient-to-br from-white to-brand-light shadow-md hover:shadow-lg transition-all duration-300;
   }
 }
+html{
+  scroll-behavior: smooth;
+}
 
 @keyframes bounce {
   0%, 20%, 50%, 80%, 100% {

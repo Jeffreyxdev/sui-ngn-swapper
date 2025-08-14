@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronRight, Zap, Shield, RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link } from 'react-router-dom';
+import Site from '@/assets/site.png'
 
 interface FeaturePillProps {
   icon: React.ReactNode;
@@ -24,7 +25,7 @@ const FeaturePill: React.FC<FeaturePillProps> = ({ icon, text, className }) => (
 
 const Hero = () => {
   return (
-    <section className="relative pt-24 pb-16 overflow-hidden">
+    <section className="relative pt-24 pb-16 mt-4  overflow-hidden">
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-white via-blue-50 to-brand-light opacity-80 -z-10"></div>
       
@@ -51,27 +52,51 @@ const Hero = () => {
               className="animation-delay-300"
             />
           </div>
+      <div className="text-center mt-12 mb-12">
+        <h1 className="text-5xl sm:text-3xl md:text-5xl font-bold mb-6 leading-tight animate-slide-up whitespace-normal sm:whitespace-nowrap break-words">
+          The future of Crypto{" "}
+          <span className="relative text-indigo-400 inline-block">
+            Payments
+            <span
+              aria-hidden="true"
+              className="absolute left-0 bottom-0 w-full h-3 pointer-events-none sm:h-2"
+              style={{
+                backgroundImage:
+                  "url('data:image/svg+xml;utf8,<svg width=\"200\" height=\"6\" xmlns=\"http://www.w3.org/2000/svg\"><polyline points=\"0,6 50,0 100,6 150,0 200,6\" fill=\"none\" stroke=\"black\" stroke-width=\"4\"/></svg>')",
+                backgroundRepeat: "repeat-x",
+                backgroundPosition: "bottom",
+                backgroundSize: "80px 4px",
+              }}
+            />
+          </span>
+        </h1>
+        <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto animate-slide-up animation-delay-200">
+          Suiver makes it effortless for freelancers, employees, and 
+          traders to turn crypto into local currency in seconds.
+          Work global. Get paid local. Instantly. Bordeless. Fast and fair.
+        </p>
+        <div className="flex flex-wrap justify-center gap-4 animate-slide-up animation-delay-300">
+          <a href="https://play.google.com/store" target="_blank" rel="noopener noreferrer">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+              alt="Get it on Google Play"
+              className="h-12"
+            />
+          </a>
+          <a href="https://apps.apple.com/app" target="_blank" rel="noopener noreferrer">
+            <img
+              src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"
+              alt="Download on the App Store"
+              className="h-12"
+            />
+          </a>
+        </div>
+        <div className="relative flex justify-center mt-[-20px]">
+          <img src={Site} alt=" hero img" className="item-center" />
+          {/* Blur effect at the bottom */}
           
-          <div className="text-center mb-12">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight animate-slide-up">
-              <span className="block">Swap SUI to</span>
-              <span className="text-green-600">Nigerian Naira</span>
-              <span className="block pencil" >Seamlessly</span>
-            </h1>
-            
-            <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto animate-slide-up animation-delay-200">
-              Exchange your SUI crypto assets directly to NGN with the best rates and minimal fees. Fast, secure, and reliable.
-            </p>
-            
-            <div className="flex flex-wrap justify-center gap-4 animate-slide-up animation-delay-300">
-             <Link to='/exchange'> <Button className="button-primary flex items-center">
-                Start Swapping <ChevronRight size={18} className="ml-1" />
-              </Button></Link>
-              <Button  variant="outline" className="button-secondary" ><a href="#about">
-                Learn More</a>
-              </Button>
-            </div>
-          </div>
+        </div>
+      </div>
         </div>
       </div>
     </section>
