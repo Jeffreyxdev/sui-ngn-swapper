@@ -55,7 +55,7 @@ const Hero = () => {
       <div className="text-center mt-12 mb-12">
         <h1 className="text-5xl sm:text-3xl md:text-5xl font-bold mb-6 leading-tight animate-slide-up whitespace-normal sm:whitespace-nowrap break-words">
           The future of Crypto{" "}
-          <span className="relative text-indigo-400 inline-block">
+          <span className="relative text-purple-600 inline-block">
             Payments
             <span
               aria-hidden="true"

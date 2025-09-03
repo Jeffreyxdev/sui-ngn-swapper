@@ -26,34 +26,35 @@ const Navbar = () => {
 
   return (
     <header 
-      className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        scrolled 
-          ? "py-3 bg-white/80 backdrop-blur-md shadow-sm" 
-          : "py-5 bg-transparent"
-      )}
+      className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-11/12 max-w-7xl mx-auto transition-all duration-300"
     >
-      <div className="container mx-auto px-4 sm:px-6 flex items-center justify-between">
+      <div className="bg-gradient-to-r from-[#F56BF7] to-[#661F5D] rounded-full shadow-lg px-6 py-3 flex items-center justify-between">
         <a href="/" className="flex items-center space-x-2 animate-fade-in">
-          <div className="w-10 h-10 rounded-lg flex mr-[-12px] justify-center overflow-hidden">
-            <img src={Logo} alt="suiver logo" />
+          <div className="w-8 h-8 flex items-center justify-center">
+            <img src={Logo} alt="suiver logo" className="h-full w-auto" />
           </div>
-          <h1 className="text-xl font-bold text-gray-900" style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 700 }}>
+          <h1 className="text-xl font-bold text-white" style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 700 }}>
             SUIVER
           </h1>
         </a>
 
         {/* Desktop Navigation */}
         {!isMobile && (
-          <nav className="hidden md:flex items-center space-x-1 animate-fade-in">
-            <a href="/" className="px-4 py-2 text-gray-700 hover:text-brand-primary transition-colors">
+          <nav className="hidden md:flex items-center space-x-6 animate-fade-in">
+            <a href="/" className="px-4 py-2 text-white hover:text-gray-200 transition-colors">
               Home
             </a>
-           
-            <a href="#about" className="px-4 py-2 text-gray-700 hover:text-brand-primary transition-colors">
-              About
+            <a href="#how" className="px-4 py-2 text-white hover:text-gray-200 transition-colors">
+              How It Works
             </a>
-            <a href="#faq" className="px-4 py-2 text-gray-700 hover:text-brand-primary transition-colors">
+            <a href="#about" className="px-4 py-2 text-white hover:text-gray-200 transition-colors">
+              About us
+            </a>
+
+            <a href="#benefits" className="px-4 py-2 text-white hover:text-gray-200 transition-colors">
+              Benefits
+            </a>
+            <a href="#faq" className="px-4 py-2 text-white hover:text-gray-200 transition-colors">
               FAQ
             </a>
           </nav>
@@ -61,15 +62,15 @@ const Navbar = () => {
 
         <div className="flex items-center space-x-4 animate-fade-in">
           <Button 
-            className="hidden md:flex bg-black hover:bg-black/80 text-white transition-all duration-300 rounded-full px-5"
-          ><Link to={'/docs'}>
-            download app</Link>
+            className="hidden md:flex bg-black text-white hover:bg-gray-900 transition-all duration-300 rounded-full px-6 py-2"
+          >
+            <Link to={'/docs'}>Get Started For Free</Link>
           </Button>
           
           {isMobile && (
             <button
               onClick={toggleMobileMenu}
-              className="md:hidden p-2 text-gray-700 hover:text-brand-primary transition-colors"
+              className="md:hidden p-2 text-white hover:text-white/90 transition-colors"
               aria-label="Toggle menu"
             >
               {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -80,11 +81,11 @@ const Navbar = () => {
 
       {/* Mobile Navigation */}
       {isMobile && mobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-50 bg-white pt-24 px-6 animate-slide-down">
+        <div className="md:hidden fixed   rounded-2xl z-50 bg-[#797277cc] pt-7 p-2 gap-3 px-6 animate-slide-down">
           <nav className="flex flex-col space-y-6 items-center ">
             <a 
               href="/" 
-              className="text-xl font-medium text-gray-900 hover:text-brand-primary transition-colors"
+              className="text-xl font-medium text-gray-900 hover:text-[#F56BF7] transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
               Home
@@ -92,20 +93,22 @@ const Navbar = () => {
            
             <a 
               href="#about" 
-              className="text-xl font-medium text-gray-900 hover:text-brand-primary transition-colors"
+              className="text-xl font-medium text-gray-900 hover:text-[#F56BF7]
+              transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
               About
             </a>
             <a 
               href="#faq" 
-              className="text-xl font-medium text-gray-900 hover:text-brand-primary transition-colors"
+              className="text-xl font-medium text-gray-900 hover:text-[#F56BF7]
+               transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
               FAQ
             </a>
             <Button 
-              className="w-full bg-brand-primary hover:bg-brand-primary/90 text-white transition-all duration-300 rounded-full mt-4"
+              className="w-full bg-[#9333EA] hover:bg-[#F56BF7]/90 text-white transition-all duration-300 rounded-full mt-4"
               onClick={() => setMobileMenuOpen(false)}
             >
               Download app
