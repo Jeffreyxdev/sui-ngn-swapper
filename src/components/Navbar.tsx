@@ -96,7 +96,7 @@ const Navbar = () => {
             </a>
            
             <a 
-              href="#about" 
+              href="#benefits" 
               className="text-xl font-medium text-black hover:text-[#F56BF7] transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
@@ -112,8 +112,8 @@ const Navbar = () => {
             <Button 
               className="w-[170px] bg-black hover:bg-[#F56BF7] text-white transition-all duration-300 rounded-full mt-4"
               onClick={() => setMobileMenuOpen(false)}
-            >
-              Contact us
+            ><Link to={'/whitepaper'}>
+              whitepaper</Link>
             </Button>
           </nav>
         </div>
