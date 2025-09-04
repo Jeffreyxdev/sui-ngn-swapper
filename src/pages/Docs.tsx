@@ -1,264 +1,273 @@
-import React from "react";
-
+import React,{useState} from "react";
+import logo from '../assets/logo.png'
+import { Menu, X } from "lucide-react"
 const Docs = () => {
+
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleLinkClick = () => {
+    if (window.innerWidth < 768) { // Close sidebar on mobile when link is clicked
+      setIsSidebarOpen(false);
+    }
+  };
+
   return (
-    <div className="flex min-h-screen bg-black text-white">
-    {/* Sidebar */}
-    <aside className="w-64 bg-black p-4 overflow-y-auto text-white">
-      <h2 className="text-lg font-semibold mb-4">suiFI WhitePaper</h2>
-      <nav>
-        <ul className="space-y-5 pl-1">
-       
-          <li>
-            <a href="#introduction" className="text-gray-300 hover:underline">
-              Introduction
-            </a>
-          </li>
-          <li>
-            <a href="#suifi-overview" className="text-gray-300 hover:underline">
-              suiFI Overview
-            </a>
-          </li>
-          <li>
-            <a href="#architecture" className="text-gray-300 hover:underline">
-              Architecture
-            </a>
-          </li>
-          <li>
-            <a href="#core-features" className="text-gray-300 hover:underline">
-              Core Features
-            </a>
-          </li>
-          <li>
-            <a href="#tokenomics" className="text-gray-300 hover:underline">
-              Tokenomics
-            </a>
-          </li>
-          <li>
-            <a href="#security-compliance" className="text-gray-300 hover:underline">
-              Security & Compliance
-            </a>
-          </li>
-          <li>
-            <a href="#use-cases" className="text-gray-300 hover:underline">
-              Use Cases
-            </a>
-          </li>
-          <li>
-            <a href="#roadmap" className="text-gray-300 hover:underline">
-              Roadmap
-            </a>
-          </li>
-          <li>
-            <a href="#team" className="text-gray-300 hover:underline">
-              Team
-            </a>
-          </li>
-          <li>
-            <a href="#conclusion" className="text-gray-300 hover:underline">
-              Conclusion
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </aside>
+    <div className="flex min-h-screen relative bg-gradient-to-br from-black to-[#661F5D]">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <img 
+          src={logo} 
+          alt="suiver logo" 
+          className="absolute right-0 top-1/2 transform -translate-y-1/2 opacity-5 w-[800px]"
+        />
+      </div>
+      <button
+        onClick={toggleSidebar}
+        className="md:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-purple-900/50 backdrop-blur-sm text-white hover:bg-purple-800/50 transition-colors"
+        aria-label="Toggle menu"
+      >
+        {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+      </button>
 
-    {/* Main Content */}
-    <main className="flex-1 p-8 space-y-10">
-      {/* Header */}
-      <header className="mb-8">
-        <h1 className="text-4xl font-bold mb-4">suiFI WhitePaper</h1>
-        <div className="bg-blue-100 text-gray-900 p-4 rounded-lg flex items-center space-y-3">
-          <div className="flex-1">
-            <p>
-              Bridging the gap between cross-chain crypto and fiat liquidity with a trustless, non-custodial P2P protocol.
-            </p>
+      {/* Sidebar */}
+      <aside className={`
+          fixed md:static w-[280px] md:w-64 h-full bg-black/20 backdrop-blur-xl 
+          p-4 overflow-y-auto text-white border-r border-white/10 
+          transition-all duration-300 ease-in-out z-40
+          ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+        `}>
+        <h2 className="text-lg font-semibold mb-4">Suiver Whitepaper</h2>
+        <nav>
+          <ul className="space-y-5 pl-1">
+            {[
+              { href: "#introduction", text: "Introduction" },
+              { href: "#overview", text: "Suiver Overview" },
+              { href: "#architecture", text: "Architecture" },
+              { href: "#core-features", text: "Core Features" },
+              { href: "#ecosystem", text: "Ecosystem & Growth" },
+              { href: "#security", text: "Security & Compliance" },
+              { href: "#use-cases", text: "Use Cases" },
+              { href: "#roadmap", text: "Roadmap" },
+              { href: "#team", text: "Team" },
+              { href: "#conclusion", text: "Conclusion" }
+            ].map((link) => (
+              <li key={link.href}>
+                <a 
+                  href={link.href}
+                  className="text-gray-300 hover:text-white hover:underline transition-colors"
+                  onClick={handleLinkClick}
+                >
+                  {link.text}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </aside>
+
+      {/* Main Content */}
+      <main className={`
+        flex-1 p-4 md:p-8 space-y-8 
+        bg-black/10 backdrop-blur-md 
+        relative z-10 text-white 
+        overflow-y-auto transition-all duration-300
+        ${isSidebarOpen ? 'blur-sm md:blur-none pointer-events-none md:pointer-events-auto' : ''}
+        pt-16 md:pt-8
+      `}>
+        {/* Header */}
+        <header className="mb-8">
+          <h1 className="text-4xl font-bold mb-4">Suiver Whitepaper</h1>
+          <div className="bg-white/10 text-white p-4 rounded-lg flex items-center">
+            <div className="flex-1">
+              <p>
+                Suiver is building the fastest way to move between crypto and
+                local cash, pay bills, send money, and swap instantly, all from
+                one simple platform.
+              </p>
+            </div>
+            <div className="ml-4">
+              <div className="w-24 h-24rounded-lg">
+                 <img src={logo} alt="suiver" className="rounded-2xl" />
+              </div>
+            </div>
           </div>
-          <div className="ml-4">
-            {/* Placeholder for an image/logo - replace with your own */}
-            <div className="w-24 h-24 bg-gray-300 rounded-lg"></div>
-          </div>
-        </div>
-      </header>
+        </header>
 
-      {/* Abstract */}
-      <section className="mb-8" id="abstract">
-        <h2 className="text-2xl font-semibold mb-4 underline ">Abstract</h2>
-        <p className="p-3">
-          SUIFI is a decentralized protocol designed to simplify and secure cross-chain to fiat conversions, starting with SUI/NGN swaps. By addressing inefficiencies in centralized exchanges, traditional DeFi, and P2P systems, suiFI enables trustless, non-custodial transactions with smart routing and liquidity aggregation. This white paper outlines suiFI’s mission to empower users globally, starting with African markets, and its long-term vision for seamless crypto-fiat interoperability.
-        </p>
-      </section>
+        {/* Introduction */}
+        <section className="mb-8" id="introduction">
+          <h2 className="text-2xl font-semibold mb-4 underline">
+            Introduction
+          </h2>
+          <p className="p-3">
+            Moving between crypto and cash today is slow, costly, and filled
+            with friction. Centralized exchanges charge high fees, P2P systems
+            are risky, and banks aren’t built for digital assets. Suiver solves
+            this by making crypto as easy as cash — instant, reliable, and ready
+            for everyday use.
+          </p>
+        </section>
 
-      {/* Introduction */}
-      <section className="mb-8" id="introduction">
-        <h2 className="text-2xl font-semibold mb-4 underline">Introduction</h2>
-        <h3 className="text-xl font-medium mb-2 "><li>Problem with Current P2P and Fiat Conversion Systems</li></h3>
-        <p className="p-3">
-          Current P2P systems often rely on centralized intermediaries, leading to high fees, delayed settlements, and risks of fraud. Trust issues and lack of transparency further complicate the process.
-          SUIFI is built to solve all those problems Bridging the cap in P2P trading
-        </p>
-        <h3 className="text-xl font-medium mb-2 mt-4 "><li>Limitations in Centralized Exchanges and Traditional DeFi</li></h3>
-        <p className="p-3">
-          Centralized exchanges impose high fees, require KYC, and are prone to hacks, while traditional DeFi lacks efficient fiat on/off-ramping, limiting mainstream adoption.
-        </p>
-        <h3 className="text-xl font-medium mb-2 mt-4">The Gap in Cross-Chain to Fiat Liquidity</h3>
-        <p className="">
-          Cross-chain ecosystems like Sui, Aptos, and Solana lack direct, secure fiat conversion mechanisms, creating a significant barrier for users seeking liquidity.
-        </p>
-      </section>
+        {/* Suiver Overview */}
+        <section className="mb-8" id="overview">
+          <h2 className="text-2xl font-semibold mb-4 underline">
+            Suiver Overview
+          </h2>
+          <h3 className="text-xl font-medium mb-2">Vision</h3>
+          <p>
+            To make crypto practical for everyone by enabling seamless swaps,
+            instant payments, and cash-like usability worldwide.
+          </p>
+          <h3 className="text-xl font-medium mb-2 mt-4">Mission</h3>
+          <p>
+            Empower Africans (and later the world) with a platform where
+            depositing crypto means instant access to cash — spendable on bills,
+            airtime, and transfers in seconds.
+          </p>
+        </section>
 
-      {/* suiFI Overview */}
-      <section className="mb-8" id="suifi-overview">
-        <h2 className="text-2xl font-semibold mb-4 underline">suiFI Overview</h2>
-        <h3 className="text-xl font-medium mb-2"><li>Vision</li></h3>
-        <p>
-          To create a seamless, trustless bridge between cross-chain crypto assets and fiat currencies, starting with African markets.
-        </p>
-        <h3 className="text-xl font-medium mb-2 mt-4"><li>Mission</li></h3>
-        <p>
-          Empower users with a secure, non-custodial platform for P2P crypto-fiat swaps, prioritizing accessibility and efficiency.
-        </p>
-        <h3 className="text-xl font-medium mb-2 mt-4">What Makes suiFI Different?</h3>
-        <p>
-          suiFI combines cross-chain integration, smart routing, and escrow-based P2P matching to deliver a unique, user-centric experience.
-        </p>
-      </section>
+        {/* Architecture */}
+        <section className="mb-8" id="architecture">
+          <h2 className="text-2xl font-semibold mb-4 underline">
+            Architecture
+          </h2>
+          <p>
+            Suiver connects blockchain liquidity with local payment rails. It
+            combines decentralized crypto swaps with fiat gateways, ensuring
+            speed and security without relying on slow intermediaries.
+          </p>
+        </section>
 
-      {/* Architecture */}
-      <section className="mb-8" id="architecture">
-        <h2 className="text-2xl font-semibold mb-4 underline">Architecture</h2>
-        <h3 className="text-xl font-medium mb-2">How suiFI Works</h3>
-        <p>
-          suiFI leverages smart contracts to facilitate trustless P2P swaps, aggregating liquidity across chains and fiat gateways.
-        </p>
-        <h3 className="text-xl font-medium mb-2 mt-4">Protocol Design</h3>
-        <p>
-          The protocol uses a modular design with escrow mechanisms, ensuring secure transactions without intermediaries.
-        </p>
-        <h3 className="text-xl font-medium mb-2 mt-4">Cross-Chain Integration (Sui, Aptos, Solana)</h3>
-        <p>
-          suiFI integrates with Sui, Aptos, and Solana using cross-chain bridges, enabling seamless asset transfers.
-        </p>
-        <h3 className="text-xl font-medium mb-2 mt-4">Fiat Gateway and On/Off-Ramping Model</h3>
-        <p>
-          Partnerships with fiat providers enable direct on/off-ramping, starting with NGN and expanding to other currencies.
-        </p>
-      </section>
+        {/* Core Features */}
+        <section className="mb-8" id="core-features">
+          <h2 className="text-2xl font-semibold mb-4 underline">
+            Core Features
+          </h2>
+          <ul className="list-disc pl-5 space-y-2">
+            <li>
+              <strong>Instant Swaps:</strong> Convert crypto to cash in
+              seconds.
+            </li>
+            <li>
+              <strong>Bill Payments:</strong> Buy airtime, pay utilities, and
+              settle expenses directly.
+            </li>
+            <li>
+              <strong>Money Transfers:</strong> Send funds instantly to family
+              or businesses.
+            </li>
+            <li>
+              <strong>Non-Custodial Foundation:</strong> Users retain control of
+              their crypto until settlement.
+            </li>
+            <li>
+              <strong>Simple UX:</strong> Designed to be as intuitive as
+              sending cash.
+            </li>
+          </ul>
+        </section>
 
-      {/* Core Features */}
-      <section className="mb-8" id="core-features">
-        <h2 className="text-2xl font-semibold mb-4 underline">Core Features</h2>
-        <ul className="list-disc pl-5 space-y-2">
-          <li>
-            <strong>Direct SUI/NGN Swaps:</strong> Instant swaps between SUI and NGN with minimal fees.
-          </li>
-          <li>
-            <strong>Non-Custodial Design:</strong> Users retain control of their funds throughout the process.
-          </li>
-          <li>
-            <strong>Smart Routing and Liquidity Aggregation:</strong> Optimizes trades by sourcing liquidity across chains.
-          </li>
-          <li>
-            <strong>Trustless P2P Matching with Escrow via Smart Contracts:</strong> Secure transactions with automated escrow.
-          </li>
-          <li>
-            <strong>KYC/Compliance Layer (if applicable):</strong> Optional KYC for regulatory compliance in certain regions.
-          </li>
-        </ul>
-      </section>
+        {/* Ecosystem */}
+        <section className="mb-8" id="ecosystem">
+          <h2 className="text-2xl font-semibold mb-4 underline">
+            Ecosystem & Growth
+          </h2>
+          <p>
+            Suiver starts in Nigeria with NGN liquidity, then scales to other
+            African currencies before going global. The ecosystem grows by
+            adding integrations for merchants, remittances, and borderless
+            commerce.
+          </p>
+        </section>
 
-      {/* Tokenomics */}
-      <section className="mb-8" id="tokenomics">
-        <h2 className="text-2xl font-semibold mb-4">Tokenomics (if launching a native token)</h2>
-        <h3 className="text-xl font-medium mb-2">Utility</h3>
-        <p>
-          The native token (if applicable) will be used for transaction fees, governance, and incentives.
-        </p>
-        <h3 className="text-xl font-medium mb-2 mt-4">Distribution</h3>
-        <p>
-          Token distribution will prioritize community allocation, with portions reserved for development and partnerships.
-        </p>
-        <h3 className="text-xl font-medium mb-2 mt-4">Governance</h3>
-        <p>
-          Token holders can vote on protocol upgrades and key decisions.
-        </p>
-        <h3 className="text-xl font-medium mb-2 mt-4">Incentives</h3>
-        <p>
-          Staking and liquidity provision will be rewarded with token incentives.
-        </p>
-      </section>
+        {/* Security */}
+        <section className="mb-8" id="security">
+          <h2 className="text-2xl font-semibold mb-4 underline">
+            Security & Compliance
+          </h2>
+          <p>
+            Smart contracts, audited infrastructure, and strong compliance
+            measures protect users. Suiver is designed to align with regulations
+            while remaining borderless and accessible.
+          </p>
+        </section>
 
-      {/* Security & Compliance */}
-      <section className="mb-8" id="security-compliance">
-        <h2 className="text-2xl font-semibold mb-4">Security & Compliance</h2>
-        <h3 className="text-xl font-medium mb-2">How Users Are Protected</h3>
-        <p>
-          Smart contract audits, escrow mechanisms, and non-custodial design ensure user safety.
-        </p>
-        <h3 className="text-xl font-medium mb-2 mt-4">Regulatory Stance and Plans</h3>
-        <p>
-          suiFI aims to comply with regional regulations, starting with optional KYC in African markets.
-        </p>
-      </section>
+        {/* Use Cases */}
+        <section className="mb-8" id="use-cases">
+          <h2 className="text-2xl font-semibold mb-4 underline">Use Cases</h2>
+          <ul className="list-disc pl-5 space-y-2">
+            <li>
+              <strong>Everyday Users:</strong> Swap crypto for cash instantly to
+              cover daily needs.
+            </li>
+            <li>
+              <strong>Freelancers:</strong> Receive international crypto
+              payments and access funds instantly in local currency.
+            </li>
+            <li>
+              <strong>Merchants:</strong> Accept crypto and cash out without
+              delay.
+            </li>
+            <li>
+              <strong>Remittances:</strong> Families abroad can send crypto that
+              converts instantly into spendable cash.
+            </li>
+          </ul>
+        </section>
 
-      {/* Use Cases */}
-      <section className="mb-8" id="use-cases">
-        <h2 className="text-2xl font-semibold mb-4">Use Cases</h2>
-        <ul className="list-disc pl-5 space-y-2">
-          <li>
-            <strong>Traders:</strong> Swap SUI for NGN directly without intermediaries.
-          </li>
-          <li>
-            <strong>Merchants:</strong> Accept crypto payments and convert to fiat seamlessly.
-          </li>
-          <li>
-            <strong>Crypto Freelancers:</strong> Receive payments in crypto and convert to local currency.
-          </li>
-          <li>
-            <strong>On-Chain Arbitrage:</strong> Leverage cross-chain liquidity for arbitrage opportunities.
-          </li>
-        </ul>
-      </section>
+        {/* Roadmap */}
+        <section className="mb-8" id="roadmap">
+          <h2 className="text-2xl font-semibold mb-4 underline">Roadmap</h2>
+          <ul className="list-disc pl-5 space-y-2">
+            <li>
+              <strong>Q4 2025:</strong> Launch with NGN liquidity and bill
+              payment support.
+            </li>
+            <li>
+              <strong>Q1 2026:</strong> Expand to more African currencies and
+              merchant integrations.
+            </li>
+            <li>
+              <strong>Future:</strong> Global rollout with multi-currency
+              support and remittance corridors.
+            </li>
+          </ul>
+        </section>
 
-      {/* Roadmap */}
-      <section className="mb-8" id="roadmap">
-        <h2 className="text-2xl font-semibold mb-4">Roadmap</h2>
-        <ul className="list-disc pl-5 space-y-2">
-          <li>
-            <strong>Q3 2025:</strong> Launch MVP with SUI/NGN swaps.
-          </li>
-          <li>
-            <strong>Q4 2025:</strong> Full cross-chain deployment (Sui, Aptos, Solana).
-          </li>
-          <li>
-            <strong>Q1 2026:</strong> Establish fiat partnerships and expand to African markets.
-          </li>
-          <li>
-            <strong>Future:</strong> Add support for more chains and fiat currencies.
-          </li>
-        </ul>
-      </section>
+        {/* Team */}
+        <section className="mb-8" id="team">
+          <h2 className="text-2xl font-semibold mb-4 underline">Team</h2>
+          <p>
+            Suiver is led by a team of blockchain builders and fintech
+            innovators, founded by Jeffrey Agabaenwere,
+            <br />
+            Jeffrey is a software engineer and product builder with a vision to make crypto usable by everyday people. With a background in fintech and Web3, he has consistently worked on bridging gaps between blockchain technology and real-world adoption. As the founder of Suiver, Jeffrey leads with a focus on accessibility, speed, and trust — reimagining how Africans, and eventually the world, interact with money. with a
+            mission to make crypto usable by everyone.
+          </p>
+        </section>
 
-      {/* Team */}
-      <section className="mb-8" id="team">
-        <h2 className="text-2xl font-semibold mb-4">Team</h2>
-        <p>
-          The suiFI team consists of experienced blockchain developers, financial experts,
-           and advisors. 
-           Lead by Jeffrey Agabaenwere (Jeffrey.sui)
-        </p>
-      </section>
-
-      {/* Conclusion */}
-      <section className="mb-8" id="conclusion">
-        <h2 className="text-2xl font-semibold mb-4">Conclusion</h2>
-        <p>
-          suiFI is poised to revolutionize crypto-fiat interoperability by providing a secure, trustless, 
-          and efficient platform for cross-chain P2P swaps. Our long-term vision is to become the go-to solution for global crypto-fiat liquidity, starting with Africa and expanding worldwide.
-        </p>
-      </section>
-    </main>
-  </div>
+        {/* Conclusion */}
+        <section className="mb-8" id="conclusion">
+          <h2 className="text-2xl font-semibold mb-4 underline">Conclusion</h2>
+          <p>
+            Suiver is reimagining crypto as everyday money. By removing friction
+            between digital assets and local cash, we’re unlocking a future
+            where crypto isn’t just an investment, it’s the easiest way to pay,
+            send, and live.
+          </p>
+        </section>
+      </main>
+      {/* Overlay for mobile */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-30 md:hidden"
+          onClick={toggleSidebar}
+          aria-hidden="true"
+        />
+      )}
+    </div>
   );
 };
 

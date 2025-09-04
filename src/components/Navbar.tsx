@@ -5,7 +5,7 @@ import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Link } from 'react-router-dom';
-import Logo from '../assets/trans.png'
+import Logo from '../assets/tran.png'
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -44,9 +44,7 @@ const Navbar = () => {
             <a href="/" className="px-4 py-2 text-white hover:text-gray-200 transition-colors">
               Home
             </a>
-            <a href="#how" className="px-4 py-2 text-white hover:text-gray-200 transition-colors">
-              How It Works
-            </a>
+            
             <a href="#about" className="px-4 py-2 text-white hover:text-gray-200 transition-colors">
               About us
             </a>
@@ -64,7 +62,7 @@ const Navbar = () => {
           <Button 
             className="hidden md:flex bg-black text-white hover:bg-gray-900 transition-all duration-300 rounded-full px-6 py-2"
           >
-            <Link to={'/docs'}>Get Started For Free</Link>
+            <Link to={'/whitepaper'}>Docs</Link>
           </Button>
           
           {isMobile && (
@@ -79,13 +77,19 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Navigation */}
+           {/* Mobile Navigation */}
       {isMobile && mobileMenuOpen && (
-        <div className="md:hidden fixed   rounded-2xl z-50 bg-[#797277cc] pt-7 p-2 gap-3 px-6 animate-slide-down">
-          <nav className="flex flex-col space-y-6 items-center ">
+        <div className="md:hidden fixed top-20 left-1/2 -translate-x-1/2 w-[90%] rounded-2xl z-50 
+          bg-white/10 backdrop-blur-md 
+          border border-white/20
+          shadow-xl 
+          pt-7 p-4 px-6 
+          animate-slide-down"
+        >
+          <nav className="flex flex-col space-y-6 items-center">
             <a 
               href="/" 
-              className="text-xl font-medium text-gray-900 hover:text-[#F56BF7] transition-colors"
+              className="text-xl font-medium text-black hover:text-[#F56BF7] transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
               Home
@@ -93,25 +97,23 @@ const Navbar = () => {
            
             <a 
               href="#about" 
-              className="text-xl font-medium text-gray-900 hover:text-[#F56BF7]
-              transition-colors"
+              className="text-xl font-medium text-black hover:text-[#F56BF7] transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
               About
             </a>
             <a 
               href="#faq" 
-              className="text-xl font-medium text-gray-900 hover:text-[#F56BF7]
-               transition-colors"
+              className="text-xl font-medium text-black hover:text-[#F56BF7] transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
               FAQ
             </a>
             <Button 
-              className="w-full bg-[#9333EA] hover:bg-[#F56BF7]/90 text-white transition-all duration-300 rounded-full mt-4"
+              className="w-[170px] bg-black hover:bg-[#F56BF7] text-white transition-all duration-300 rounded-full mt-4"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Download app
+              Contact us
             </Button>
           </nav>
         </div>

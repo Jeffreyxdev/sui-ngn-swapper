@@ -2,6 +2,7 @@ import React from 'react';
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import { Link } from 'react-router-dom';
+import FaqItem from '@/components/FAQ';
 import Logo from '@/assets/white.png'
 import ParticlesBackground from "@/components/ParticlesBackground";
 import { Button } from "@/components/ui/button";
@@ -32,7 +33,7 @@ const Index = () => {
         <div className="container mx-auto px-4 sm:px-6">
           <div className="flex flex-col  items-center justify-between gap-12">
             <div className="w-full lg:w-1/2 order-2 lg:order-1 animate-slide-up">
-              <div className="max-w-lg">
+              <div className="max-w-2xl">
                 <h2 className="text-3xl sm:text-4xl font-bold mb-6 leading-tight">
                  Unlock The Power of
                     Fast and
@@ -57,7 +58,7 @@ const Index = () => {
                   
                   <div className="bg-white/50 backdrop-blur-sm rounded-lg p-4 border border-gray-200/50 shadow-sm">
                     <div className="flex items-start space-x-3">
-                      <RefreshCw size={20} className="text-brand-primary mt-0.5 flex-shrink-0" />
+                      <RefreshCw size={20} className="text-[#F56BF7] mt-0.5 flex-shrink-0" />
                       <div>
                         <h4 className="font-medium text-gray-900 mb-1">Real-time rates</h4>
                         <p className="text-sm text-gray-600">
@@ -69,12 +70,10 @@ const Index = () => {
                 </div>
                 
                 <div className="flex flex-wrap gap-4 items-center">
-                  <Button className="flex items-center bg-brand-primary hover:bg-brand-primary/90 text-white">
-                    View Exchange Rates <ExternalLink size={16} className="ml-2" />
-                  </Button>
+                  
                   
                   <div className="inline-flex items-center px-4 py-2 rounded-lg bg-white/70 backdrop-blur-md border border-gray-200/50 shadow-sm">
-                    <Lock size={16} className="text-brand-primary mr-2" />
+                    <Lock size={16} className="text-[#F56BF7] mr-2" />
                     <span className="text-sm font-medium text-gray-700">Secure Transactions</span>
                   </div>
                 </div>
@@ -87,91 +86,184 @@ const Index = () => {
       </section>
       
       {/* Features Section */}
-      <section id="about" className="py-16 bg-gray-50/80 backdrop-blur-sm relative">
+      
+      <section id="benefits" className="py-16   bg-gray-50/80
+      backdrop-blur-lg relative">
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">Why Choose Suiver?</h2>
+          <div className="text-center max-w-3xl mx-auto mb-12"><div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <img 
+          src={Logo} 
+          alt="suiver logo" 
+          className="absolute right-0 top-1/2 transform -translate-y-1/2 opacity-5 w-[800px]"
+        />
+      </div>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">Experience Suiver</h2>
             <p className="text-xl text-gray-600">
-              Experience the easiest way to exchange Crypto for Nigerian Naira with these powerful features
+              Everything you need to manage your crypto and payments in one place
             </p>
+             
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Feature 1 */}
-            <div className="glass-panel rounded-2xl p-6 animate-fade-in">
-              <Clock size={28} className="text-[#F56BF7] mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Fast Transactions</h3>
-              <p className="text-gray-600">
-                Complete your exchanges in minutes, not hours. Our optimized system ensures rapid processing.
-              </p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
+            {/* Feature Items */}
+            <div className="flex flex-col items-center text-center p-6 rounded-xl bg-white/30 backdrop-blur-sm hover:bg-white/40 transition-all duration-300">
+              <div className="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center mb-4">
+                <RefreshCw className="w-8 h-8 text-[#F56BF7]" />
+              </div>
+              <h3 className="font-semibold mb-2">Instant Swaps</h3>
+              <p className="text-sm text-gray-600">Easy and quick deposits via multiple crypto</p>
             </div>
-            
-            {/* Feature 2 */}
-            <div className="glass-panel rounded-2xl p-6 animate-fade-in animation-delay-200">
-              <Award size={28} className="text-[#F56BF7] mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Best Rates</h3>
-              <p className="text-gray-600">
-                We continuously monitor the market to offer you the most competitive exchange rates.
-              </p>
+      
+            <div className="flex flex-col items-center text-center p-6 rounded-xl bg-white/30 backdrop-blur-sm hover:bg-white/40 transition-all duration-300">
+              <div className="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center mb-4">
+                <Users className="w-8 h-8 text-[#F56BF7]" />
+              </div>
+              <h3 className="font-semibold mb-2">User Friendly</h3>
+              <p className="text-sm text-gray-600">Simple and intuitive interface</p>
             </div>
-            
-            {/* Feature 3 */}
-            <div className="glass-panel rounded-2xl p-6 animate-fade-in animation-delay-300">
-              <Lock size={28} className="text-[#F56BF7] mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Secure Platform</h3>
-              <p className="text-gray-600">
-                Our platform utilizes advanced security measures to protect your transactions and personal information.
-              </p>
+      
+            <div className="flex flex-col items-center text-center p-6 rounded-xl bg-white/30 backdrop-blur-sm hover:bg-white/40 transition-all duration-300">
+              <div className="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center mb-4">
+                <Lock className="w-8 h-8 text-[#F56BF7]" />
+              </div>
+              <h3 className="font-semibold mb-2">Secure Platform</h3>
+              <p className="text-sm text-gray-600">Advanced security measures</p>
+            </div>
+      
+            <div className="flex flex-col items-center text-center p-6 rounded-xl bg-white/30 backdrop-blur-sm hover:bg-white/40 transition-all duration-300">
+              <div className="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center mb-4">
+                <Clock className="w-8 h-8 text-[#F56BF7]" />
+              </div>
+              <h3 className="font-semibold mb-2">24/7 Support</h3>
+              <p className="text-sm text-gray-600">Round-the-clock customer support</p>
+            </div>
+      
+            {/* Second Row */}
+            <div className="flex flex-col items-center text-center p-6 rounded-xl bg-white/30 backdrop-blur-sm hover:bg-white/40 transition-all duration-300">
+              <div className="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center mb-4">
+                <ArrowRight className="w-8 h-8 text-[#F56BF7]" />
+              </div>
+              <h3 className="font-semibold mb-2">Direct Deposits</h3>
+              <p className="text-sm text-gray-600">Instant bank transfers</p>
+            </div>
+      
+            <div className="flex flex-col items-center text-center p-6 rounded-xl bg-white/30 backdrop-blur-sm hover:bg-white/40 transition-all duration-300">
+              <div className="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center mb-4">
+                <ExternalLink className="w-8 h-8 text-[#F56BF7]" />
+              </div>
+              <h3 className="font-semibold mb-2">Bill Payments</h3>
+              <p className="text-sm text-gray-600">Pay utilities and subscriptions</p>
+            </div>
+      
+            <div className="flex flex-col items-center text-center p-6 rounded-xl bg-white/30 backdrop-blur-sm hover:bg-white/40 transition-all duration-300">
+              <div className="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center mb-4">
+                <Award className="w-8 h-8 text-[#F56BF7]" />
+              </div>
+              <h3 className="font-semibold mb-2">Best Rates</h3>
+              <p className="text-sm text-gray-600">Competitive exchange rates</p>
+            </div>
+      
+            <div className="flex flex-col items-center text-center p-6 rounded-xl bg-white/30 backdrop-blur-sm hover:bg-white/40 transition-all duration-300">
+              <div className="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center mb-4">
+                <Users className="w-8 h-8 text-[#F56BF7]" />
+              </div>
+              <h3 className="font-semibold mb-2">Community</h3>
+              <p className="text-sm text-gray-600">Join our growing community</p>
             </div>
           </div>
-          
-          
         </div>
       </section>
       
-      {/* FAQ Section */}
-      <section id="faq" className="py-16 bg-white/80 backdrop-blur-sm">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">Frequently Asked Questions</h2>
-            <p className="text-xl text-gray-600">
-              Find answers to common questions about our services
-            </p>
-          </div>
-          
-          <div className="max-w-3xl mx-auto divide-y divide-gray-200">
-            {/* FAQ Item 1 */}
-            <div className="py-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">How long does a transaction take?</h3>
-              <p className="text-gray-600">
-                Most transactions are processed within 1-2 minutes, depending on network congestion. Once confirmed, you'll receive your NGN immediately.
-              </p>
-            </div>
-            
-            {/* FAQ Item 2 */}
-            <div className="py-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">What are your exchange fees?</h3>
-              <p className="text-gray-600">
-                We charge a small fee of 1% per transaction. This fee covers the operational costs and ensures we can provide you with the best service.
-              </p>
-            </div>
-            
-            {/* FAQ Item 3 */}
-            <div className="py-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Is my transaction secure?</h3>
-              <p className="text-gray-600">
-                Yes, all transactions are securely processed on the blockchain. We use industry-standard encryption and security practices to protect your data.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+   
+
+{/* FAQ Section */}
+<section id="faq" className="py-16 bg-white/80 backdrop-blur-sm">
+  <div className="container mx-auto px-4 sm:px-6">
+    <div className="text-center max-w-3xl mx-auto mb-12">
+      <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+        Frequently Asked Questions
+      </h2>
+      <p className="text-xl text-gray-600">
+        Find answers to common questions about Suiver
+      </p>
+    </div>
+
+    <div className="max-w-3xl mx-auto p-3">
+      <FaqItem
+        question="What is Suiver?"
+        answer="Suiver is a fintech platform that makes crypto as easy as cash. You can instantly swap your crypto to local currency, pay bills, buy airtime, and send money to family& friends all in one simple app."
+      />
+      
+      <FaqItem
+        question="How is Suiver different from exchanges and P2P platforms?"
+        answer="Unlike centralized exchanges, Suiver is built for speed and simplicity no long delays, no hidden fees. Unlike risky P2P deals, Suiver provides instant settlement and reliability, so you never have to worry about being scammed."
+      />
+      
+      <FaqItem
+        question="What currencies does Suiver support?"
+        answer="We're starting with NGN (Nigerian Naira) and popular crypto assets like USDT, BTC, ETH, and SUI. Over time, we'll expand into other African currencies and global markets."
+      />
+      
+      <FaqItem
+        question="How fast are withdrawals to cash?"
+        answer="Withdrawals are instant. Once your crypto is deposited, you can cash out, pay bills, or send money within seconds."
+      />
+      
+      <FaqItem
+        question="Is Suiver safe?"
+        answer="Yes. Suiver is designed with a non-custodial foundation, meaning you retain control of your funds until settlement. We also integrate security audits and compliance measures to protect users."
+      />
+      
+      <FaqItem
+        question="Do I need KYC to use Suiver?"
+        answer="For small transactions, you may not need KYC. For larger transactions or regulatory requirements, a simple verification may be required. We balance compliance with user accessibility."
+      />
+      
+      <FaqItem
+        question="Can I use Suiver outside Nigeria?"
+        answer="Our first market is Nigeria, but Suiver is designed to expand across Africa and later globally. The same seamless crypto-to-cash experience will roll out to other countries step by step."
+      />
+      
+      <FaqItem
+        question="What can I do with my cash once I swap?"
+        answer="You can withdraw to your bank, buy airtime, pay bills, or send money to family and friends all directly from the Suiver app."
+      />
+      
+      <FaqItem
+        question="Does Suiver have its own token?"
+        answer="Currently, Suiver is focused on utility and adoption, not a token-first model. A token may be introduced in the future if it strengthens the ecosystem."
+      />
+      
+      <FaqItem
+        question="Who is behind Suiver?"
+        answer="Suiver is founded by Jeffrey Agabaenwere, a blockchain builder and fintech innovator, backed by a team of developers and advisors passionate about making crypto usable for everyone."
+      />
+    </div>
+  </div>
+</section>
+
       
       {/* Footer */}
       <footer className="bg-gray-50/80 backdrop-blur-sm border-t border-gray-200/50 py-12">
         <div className="container mx-auto px-4 sm:px-6">
+       <div className="absolute inset-0 overflow-hidden pointer-events-none">
+  <div className="animate-slide-horizontal flex whitespace-nowrap">
+    {/* Duplicate logos to create seamless loop */}
+    {[...Array(3)].map((_, index) => (
+      <img 
+        key={index}
+        src={Logo} 
+        alt=""
+        aria-hidden="true"
+        className="w-[400px] h-[400px] opacity-5 object-contain"
+      />
+    ))}
+  </div>
+</div>  
+      
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-6 md:mb-0">
+              
               <a href="/" className="flex items-center space-x-2">
                           <div className="w-10 h-10 rounded-lg flex mr-[-12px] sm:ml-[-22px] justify-center overflow-hidden">
             <img src={Logo} alt="suiver logo" />
@@ -187,11 +279,12 @@ const Index = () => {
               <div>
                 <h4 className="font-semibold text-gray-900 mb-3">Quick Links</h4>
                 <ul className="space-y-2">
-                  <li><a href="/" className="text-gray-600 hover:text-brand-primary text-sm">Home</a></li>
+                  <li><a href="/" className="text-gray-600 
+                  hover:text-[#F56BF7] text-sm">Home</a></li>
               
-                  <li><a href="#about" className="text-gray-600 hover:text-brand-primary text-sm">About</a></li>
-                  <li><a href="#faq" className="text-gray-600 hover:text-brand-primary text-sm">FAQ</a></li>
-                  <li><a href="/docs" className="text-gray-600 hover:text-brand-primary text-sm">DOCS</a></li>
+                  <li><a href="#about" className="text-gray-600 hover:text-[#F56BF7] text-sm">About</a></li>
+                  <li><a href="#faq" className="text-gray-600 hover:text-[#F56BF7] text-sm">FAQ</a></li>
+                  <li><a href="/whitepaper" className="text-gray-600 hover:text-[#F56BF7] text-sm">whitepaper</a></li>
                 </ul>
               </div>
               
@@ -211,7 +304,7 @@ const Index = () => {
             </p>
             
             <div className="flex space-x-6">
-              <a href="https://x.com/suiver_africa" className="text-[#F56BF7] hover:text-brand-primary">
+              <a href="https://x.com/suiver_africtext-[#F56BF7a" className="text-[#F56BF7] hover:text-brand-primary">
                 <span className="sr-only">Twitter</span>
                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
