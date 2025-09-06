@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Docs from "./pages/Docs"
 import Exchange from "./pages/Exchange"
+import WaitlistForm from "./pages/waitlist";
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -19,6 +20,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
          <Route path="/whitepaper" element={<Docs/>}/>
          <Route path="/exchange" element={<Exchange/>}/>
+         <Route path="/waitlist" element={<WaitlistForm/>}/>
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
